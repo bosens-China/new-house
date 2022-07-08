@@ -10,10 +10,10 @@ const users = new Router<DefaultState, Context>({ prefix: '/users' });
 users.post(
   '/register',
   validator({
-    body: Joi.object().keys({
+    body: Joi.object({
       userName: Joi.string().min(1).max(20).required(),
       password: Joi.string().min(1).max(20).required(),
-    }),
+    }).options({ stripUnknown: true }),
   }),
   async (ctx) => {
     const body = ctx.request.body as Omit<Data, 'mailbox'>;
@@ -30,6 +30,7 @@ users.post(
     };
     const token = sign(obj);
     db.data.push(obj);
+
     await db.write();
     ctx.success(token);
   },
@@ -44,6 +45,7 @@ users.post('/signIn', async (ctx) => {
   const result = db.data.find((f) => f.userName === user.userName && user.password === f.password);
   if (result) {
     ctx.success('登录成功');
+
     return;
   }
   ctx.error('账号或者密码错误');

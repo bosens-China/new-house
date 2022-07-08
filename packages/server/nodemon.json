@@ -1,5 +1,5 @@
 {
-  "ignore": ["__test__"],
+  "ignore": ["__test__", "database/*.json"],
   "ext": "ts,json",
   "exec": "node -r esbuild-register main.ts",
   "legacyWatch": true,
