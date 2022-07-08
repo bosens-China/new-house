@@ -1,0 +1,9 @@
+{
+  "ignore": ["__test__"],
+  "ext": "ts,json",
+  "exec": "node -r esbuild-register main.ts",
+  "legacyWatch": true,
+  "env": {
+    "port": 3000
+  }
+}

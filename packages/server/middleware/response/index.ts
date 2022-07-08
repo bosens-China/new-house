@@ -1,0 +1,26 @@
+import { Context, Next } from 'koa';
+
+export default () => async (ctx: Context, next: Next) => {
+  ctx.success =
+    () =>
+    <T>(body: T) => {
+      ctx.body = {
+        code: 200,
+        data: body,
+        message: 'ok',
+      };
+    };
+  ctx.error = (err: Error | string, code = 400) => {
+    ctx.body = {
+      code,
+      data: err instanceof Error ? err.message : err,
+      message: 'error',
+    };
+  };
+
+  try {
+    await next();
+  } catch (e: any) {
+    ctx.error(e);
+  }
+};
