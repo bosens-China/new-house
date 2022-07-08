@@ -17,5 +17,10 @@ module.exports = {
       { namedComponents: 'arrow-function', unnamedComponents: 'arrow-function' },
     ],
     'import/no-extraneous-dependencies': ['error', { devDependencies: ['./vite.config.ts'] }],
+    '@typescript-eslint/no-floating-promises': 'off',
+    '@typescript-eslint/no-unsafe-member-access': 'off',
+    '@typescript-eslint/no-unsafe-call': 'off',
+    '@typescript-eslint/no-unsafe-argument': 'off',
+    '@typescript-eslint/restrict-template-expressions': 'off',
   },
 };

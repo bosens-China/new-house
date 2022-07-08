@@ -1,14 +1,46 @@
-import { Button, Checkbox, Form, Input, Tabs, TabsProps } from 'antd';
+import { RegisterBody, signIn, register } from '@/api/login';
+import { Button, Checkbox, Form, Input, message, Tabs, TabsProps } from 'antd';
 import React, { useState } from 'react';
+import _ from 'lodash-es';
+import { useLocalStorageState } from 'ahooks';
+import { useNavigate } from 'react-router-dom';
+
 import './style.less';
+import { setToken } from '@/utils/token';
 
 const { TabPane } = Tabs;
 
+interface Values extends RegisterBody {
+  remember: boolean;
+}
+
 const Login = () => {
   const [state, setState] = useState('1');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const [form] = Form.useForm();
-  const onFinish = (values) => {
-    console.log('Success:', values);
+  const [initialValues, setInitialValues] = useLocalStorageState<Values>('user', {
+    defaultValue: { remember: true, userName: '', password: '' },
+  });
+  const onFinish = (values: Values) => {
+    const fn = state === '1' ? signIn : register;
+    setLoading(true);
+    fn(values)
+      .then((res) => {
+        if (_.isString(res)) {
+          return;
+        }
+        setToken(res.token);
+        setInitialValues(values.remember ? values : { remember: false, userName: '', password: '' });
+        message.success(state === '1' ? '登录成功' : '注册成功');
+        navigate('/mailbox');
+      })
+      .catch((err) => {
+        message.error(err instanceof Error ? err.message : `${err}`);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const onChange: TabsProps['onChange'] = (e) => {
@@ -22,9 +54,7 @@ const Login = () => {
         form={form}
         className="login-form"
         name="login"
-        initialValues={{
-          remember: true,
-        }}
+        initialValues={initialValues}
         onFinish={onFinish}
         autoComplete="off"
       >
@@ -33,7 +63,7 @@ const Login = () => {
           <TabPane tab="注册" key="2" />
         </Tabs>
         <Form.Item
-          name="username"
+          name="userName"
           rules={[
             {
               required: true,
@@ -67,7 +97,7 @@ const Login = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button block type="primary" htmlType="submit">
+          <Button block type="primary" htmlType="submit" loading={loading}>
             {state === '1' ? '登录' : '注册'}
           </Button>
         </Form.Item>
