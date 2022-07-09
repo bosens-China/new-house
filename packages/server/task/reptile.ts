@@ -1,6 +1,6 @@
 import { load } from 'cheerio';
 import dayjs from 'dayjs';
-import type { Data } from '../database/home';
+import { Data } from '../model/reptile';
 
 const trim = (str: string) => str.replace(/^\s*|\s*$/g, '');
 

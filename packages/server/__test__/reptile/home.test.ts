@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { homeList, getTotal } from '../../reptile/home';
+import { homeList, getTotal } from '../../task/reptile';
 
 const html = fs.readFileSync(path.join(__dirname, './index.html'), 'utf-8');
 

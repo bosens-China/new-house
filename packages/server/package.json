@@ -5,20 +5,22 @@
     "axios-retry": "^3.3.1",
     "cheerio": "1.0.0-rc.12",
     "dayjs": "^1.11.3",
+    "dotenv": "^16.0.1",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
     "koa-context-validator": "^1.0.0",
     "koa-router": "^11.0.1",
-    "lowdb": "^3.0.0",
+    "lodash": "^4.17.21",
+    "mongoose": "^6.4.4",
     "nodemailer": "^6.7.7",
     "nodemon": "^2.0.19",
-    "random-useragent": "^0.5.0",
-    "randomkey": "^1.0.0"
+    "random-useragent": "^0.5.0"
   },
   "scripts": {
     "dev": "nodemon",
+    "database:startup": "docker-compose -f docker-compose.dev.yml up",
     "test": "jest"
   },
   "devDependencies": {
@@ -26,6 +28,7 @@
     "@types/koa": "^2.13.4",
     "@types/koa-bodyparser": "^4.3.7",
     "@types/koa-router": "^7.4.4",
+    "@types/lodash": "^4.14.182",
     "@types/random-useragent": "^0.3.1"
   }
 }

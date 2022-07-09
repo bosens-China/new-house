@@ -2,14 +2,15 @@ import { MailOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/
 import { Layout, Menu } from 'antd';
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import './style.less';
 
 const { Header, Content, Sider } = Layout;
 
 const View = () => {
   const [collapsed, setCollapsed] = useState(false);
   return (
-    <Layout>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
+    <Layout className="layout">
+      <Sider trigger={null} collapsible collapsed={collapsed} className="layout-sider">
         <div className="logo" />
         <Menu
           theme="dark"
@@ -24,21 +25,19 @@ const View = () => {
           ]}
         />
       </Sider>
-      <Layout className="site-layout">
-        <Header className="site-layout-background" style={{ padding: 0 }}>
+      <Layout
+        className="layout-main"
+        style={{
+          marginLeft: !collapsed ? '200px' : '80px',
+        }}
+      >
+        <Header className="layout-main-header">
           {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-            className: 'trigger',
+            className: 'layout-main-header-trigger',
             onClick: () => setCollapsed(!collapsed),
           })}
         </Header>
-        <Content
-          className="site-layout-background"
-          style={{
-            margin: '24px 16px',
-            padding: 24,
-            minHeight: 280,
-          }}
-        >
+        <Content className="layout-main-main">
           <Outlet />
         </Content>
       </Layout>

@@ -22,5 +22,12 @@ module.exports = {
     '@typescript-eslint/no-unsafe-call': 'off',
     '@typescript-eslint/no-unsafe-argument': 'off',
     '@typescript-eslint/restrict-template-expressions': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
+    'react/require-default-props': 'off',
+    '@typescript-eslint/no-misused-promises': 'off',
+    'no-underscore-dangle': 'off',
+    'jsx-a11y/anchor-is-valid': 'off',
+    'react/jsx-no-script-url': 'off',
+    'no-script-url': 'off',
   },
 };

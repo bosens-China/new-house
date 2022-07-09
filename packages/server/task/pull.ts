@@ -1,15 +1,14 @@
-import db from '../database/home';
+import db from '../model/reptile';
 import request from '../utils/request';
-import { homeList, getTotal, TOTAL_PAGE } from '../reptile/home';
+import { homeList, getTotal, TOTAL_PAGE } from './reptile';
 
 await (async () => {
   const { data: html } = await request.get<string>(`http://60.173.254.126:8888/?p=1&xmmc=&qy=&djzt=`);
   const listData = homeList(html);
   const total = getTotal(html);
   // 取页面的总数 - 数据库已经存在的数据来判断还需要拉取几页
-  await db.read();
-  db.data ||= [];
-  const diffLength = total - db.data.length;
+  const { length } = await db.find({});
+  const diffLength = total - length;
   if (!diffLength) {
     return;
   }
@@ -27,7 +26,5 @@ await (async () => {
 
   // 取新增的数据，插入到数据库中
   const newData = listData.slice(0, diffLength);
-  db.data.unshift(...newData);
-  await db.write();
-  // 通知变更
+  await db.insertMany(newData);
 })();

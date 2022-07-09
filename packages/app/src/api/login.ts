@@ -17,6 +17,6 @@ export const signIn = async (body: RegisterBody) => {
 export const register = async (body: RegisterBody) => {
   const {
     data: { data },
-  } = await request.post<Response<{ token: string }>>('/users/register', body);
+  } = await request.post<Response<string>>('/users/register', body);
   return data;
 };

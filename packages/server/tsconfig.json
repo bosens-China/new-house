@@ -2,5 +2,6 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "typeRoots": ["node_modules/@types", "./typings"]
-  }
+  },
+  "include": [".eslintrc.js", "**/*.ts", "*.ts", "*.js"]
 }
