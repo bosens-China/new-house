@@ -1,8 +1,11 @@
-import React, { FC, useMemo } from 'react';
-import { addMailbox, List, putMailbox } from '@/api/mailbox';
-import { Modal, Form, Input, message } from 'antd';
+import React, { FC, useEffect, useMemo } from 'react';
+import { addMailbox, List, PostBody, putMailbox } from '@/api/mailbox';
+import { Modal, Form, Input, message, Select } from 'antd';
 import { useRequest } from 'ahooks';
 
+import { region } from './constant';
+
+const { Option } = Select;
 interface Props {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -41,12 +44,20 @@ const View: FC<Props> = (props) => {
   });
 
   const handleOk = async () => {
-    const values = (await form.validateFields()) as { mailbox: string };
+    const values = (await form.validateFields()) as PostBody;
     if (edit) {
       return runPut(current!._id, values);
     }
     return runAdd(values);
   };
+
+  // 监听打开
+  useEffect(() => {
+    if (!visible) {
+      return;
+    }
+    form.setFieldsValue(current);
+  }, [visible, current, form]);
 
   return (
     <Modal
@@ -58,7 +69,15 @@ const View: FC<Props> = (props) => {
       onCancel={handleCancel}
       confirmLoading={loadingAdd || loadingPut}
     >
-      <Form preserve={false} labelCol={{ span: 4 }} wrapperCol={{ span: 16 }} form={form}>
+      <Form
+        preserve={false}
+        labelCol={{ span: 4 }}
+        wrapperCol={{ span: 16 }}
+        form={form}
+        initialValues={{
+          region: region.map((f) => f.value),
+        }}
+      >
         <Form.Item
           label="邮箱地址"
           name="mailbox"
@@ -68,6 +87,19 @@ const View: FC<Props> = (props) => {
           ]}
         >
           <Input placeholder="请输入邮箱地址" />
+        </Form.Item>
+        <Form.Item
+          label="订阅区域"
+          name="region"
+          rules={[{ required: true, type: 'array', message: '订阅区域必须存在一个!' }]}
+        >
+          <Select mode="multiple" allowClear>
+            {region.map(({ label, value }) => (
+              <Option value={value} key={value}>
+                {label}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
       </Form>
     </Modal>

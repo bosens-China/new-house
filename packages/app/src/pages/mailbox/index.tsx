@@ -1,11 +1,15 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Col, Row, Space, Table, Popconfirm, message } from 'antd';
+import { Button, Form, Input, Col, Row, Space, Table, Popconfirm, message, Select, Tag } from 'antd';
 import React, { useState } from 'react';
 import { useRequest } from 'ahooks';
-import { listMailbox, List, deleteMailbox, PostBody } from '@/api/mailbox';
+import { listMailbox, List, deleteMailbox, ListParams } from '@/api/mailbox';
 import { ColumnsType } from 'antd/lib/table';
 import Modal from './modal';
+
 import './style.less';
+import { region } from './constant';
+
+const { Option } = Select;
 
 const View = () => {
   const [form] = Form.useForm();
@@ -17,6 +21,7 @@ const View = () => {
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState<List>();
   const onNew = () => {
+    setCurrent(undefined);
     setVisible(true);
   };
   const { run: deleteRun } = useRequest(deleteMailbox, {
@@ -34,6 +39,19 @@ const View = () => {
       dataIndex: 'mailbox',
     },
     {
+      title: '订阅区域',
+      key: 'region',
+      render(item: List) {
+        return (
+          <>
+            {item.region.map((label) => (
+              <Tag key={label}>{label}</Tag>
+            ))}
+          </>
+        );
+      },
+    },
+    {
       title: '操作',
       key: 'operation',
       align: 'center',
@@ -45,6 +63,7 @@ const View = () => {
         };
         const onDelete = () => {
           deleteRun(item._id);
+          refresh();
         };
         return (
           <Space>
@@ -52,9 +71,7 @@ const View = () => {
               更新
             </a>
             <Popconfirm title="确定删除该条数据吗" onConfirm={onDelete}>
-              <a href="javascript:" onClick={onDelete}>
-                删除
-              </a>
+              <a href="javascript:">删除</a>
             </Popconfirm>
           </Space>
         );
@@ -62,33 +79,49 @@ const View = () => {
     },
   ];
 
-  const onFinish = (values: PostBody) => {
-    run(values.mailbox);
+  const onFinish = (values: ListParams) => {
+    run(values);
   };
   const onReset = () => {
     form.resetFields();
-    run('');
+    run();
   };
 
   return (
     <>
       <div className="mailbox">
-        <Form form={form} onFinish={onFinish}>
+        <Form
+          form={form}
+          onFinish={onFinish}
+          initialValues={{
+            region: 'all',
+          }}
+        >
           <Row gutter={12}>
-            <Col flex="1 1 200px">
+            <Col flex="auto">
               <Form.Item label="邮箱地址" name="mailbox">
                 <Input placeholder="请输入查找邮箱地址" />
               </Form.Item>
             </Col>
-            <Col flex="2 1">
+            <Col flex="auto">
+              <Form.Item label="订阅区域" name="region">
+                <Select>
+                  <Option value="all">所有区域</Option>
+                  {region.map(({ label, value }) => (
+                    <Option value={value} key={value}>
+                      {label}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col flex="auto">
               <Form.Item>
                 <Space>
                   <Button type="primary" htmlType="submit">
                     查找
                   </Button>
-                  <Button htmlType="submit" onClick={onReset}>
-                    重置
-                  </Button>
+                  <Button onClick={onReset}>重置</Button>
                 </Space>
               </Form.Item>
             </Col>

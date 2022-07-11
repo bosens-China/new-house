@@ -5,6 +5,7 @@ import Verification from './verification';
 
 const Login = lazy(() => import('@/pages/login'));
 const Mailbox = lazy(() => import('@/pages/mailbox'));
+const SetUp = lazy(() => import('@/pages/setUp'));
 
 const View = () => (
   <BrowserRouter>
@@ -18,6 +19,14 @@ const View = () => (
             element={
               <Verification redirect="/login">
                 <Mailbox />
+              </Verification>
+            }
+          />
+          <Route
+            path="SetUp"
+            element={
+              <Verification redirect="/login">
+                <SetUp />
               </Verification>
             }
           />

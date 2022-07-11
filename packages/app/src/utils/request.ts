@@ -25,10 +25,15 @@ instance.interceptors.response.use(
   (response: AxiosResponse<Response<unknown>>) => {
     const { data } = response;
     const { code, message } = data;
-    if (code !== 200) {
-      return Promise.reject(message);
+    switch (code) {
+      case 403:
+        window.location.href = '/login';
+        return null;
+      case 200:
+        return response;
+      default:
+        return Promise.reject(message);
     }
-    return response;
   },
   (error) => Promise.reject(error),
 );

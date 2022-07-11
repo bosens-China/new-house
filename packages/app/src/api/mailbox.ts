@@ -3,6 +3,7 @@ import request from '@/utils/request';
 
 export interface PostBody {
   mailbox: string;
+  region: Array<string>;
 }
 export const addMailbox = async (body: PostBody) => {
   const {
@@ -25,14 +26,19 @@ export const deleteMailbox = async (id: string) => {
   return data;
 };
 
-export interface List {
+export interface List extends PostBody {
   parentId: string;
-  mailbox: string;
   _id: string;
 }
-export const listMailbox = async (mailbox: string) => {
+
+export interface ListParams {
+  mailbox: string;
+  region: string;
+}
+
+export const listMailbox = async (params?: ListParams) => {
   const {
     data: { data },
-  } = await request.get<Response<Array<List>>>(`/mailbox/`, { params: { mailbox } });
+  } = await request.get<Response<Array<List>>>(`/mailbox/`, { params });
   return data;
 };

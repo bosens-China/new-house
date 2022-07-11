@@ -20,6 +20,6 @@ export default () => async (ctx: Context, next: Next) => {
   try {
     await next();
   } catch (e: any) {
-    ctx.error(e);
+    ctx.error(e, 403);
   }
 };
