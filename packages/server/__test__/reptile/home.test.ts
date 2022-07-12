@@ -6,6 +6,8 @@ const html = fs.readFileSync(path.join(__dirname, './index.html'), 'utf-8');
 
 test('home list', () => {
   const list = homeList(html);
+  console.log(list);
+
   expect(Array.isArray(list)).toBeTruthy();
   expect(list[0]).toEqual({
     name: '滨奥花园',

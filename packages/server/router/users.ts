@@ -1,7 +1,6 @@
 import Router from 'koa-router';
 import validator, { Joi } from 'koa-context-validator';
 import { DefaultState, Context } from 'koa';
-import _ from 'lodash';
 import db, { Data } from '../model/users';
 import { encryption, sign } from './utils';
 
@@ -26,6 +25,7 @@ users.post(
     const obj = {
       userName: body.userName,
       password: encryption(body.password),
+      root: body.root,
     };
 
     await db.insertMany([obj]);
@@ -56,7 +56,7 @@ users.post(
     }
 
     const token = sign(findObj);
-    ctx.success(token);
+    ctx.success({ token, root: !!result.root });
   },
 );
 

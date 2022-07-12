@@ -1,16 +1,23 @@
 import { Schema, model } from 'mongoose';
 
 export interface Data {
+  // 名称
   name: string;
+  // 链接地址
   url: string;
+  // 区域
   region: string;
+  // 开始时间
   startTime: number;
+  // 结束时间
   endTime: number;
+  // 总套数
   total: number;
   // 企业名称
   enterpriseName: string;
   // 楼栋
   building: Array<string>;
+  // 登记状态
   state: '正在登记' | '暂未开始' | '登记结束';
 }
 

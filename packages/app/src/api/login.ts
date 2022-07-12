@@ -9,7 +9,7 @@ export interface RegisterBody {
 export const signIn = async (body: RegisterBody) => {
   const {
     data: { data },
-  } = await request.post<Response<string>>('/users/signIn', body);
+  } = await request.post<Response<{ token: string; root: boolean }>>('/users/signIn', body);
   return data;
 };
 

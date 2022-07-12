@@ -3,9 +3,11 @@ import { Button, Checkbox, Form, Input, message, Tabs, TabsProps } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useLocalStorageState, useRequest } from 'ahooks';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import './style.less';
 import { setToken } from '@/utils/token';
+import { setRoot } from '@/store/users';
 
 const { TabPane } = Tabs;
 
@@ -17,6 +19,7 @@ const Login = () => {
   const [state, setState] = useState('1');
   const navigate = useNavigate();
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
   const [initialValues, setInitialValues] = useLocalStorageState<Values>('user', {
     defaultValue: { remember: true, userName: '', password: '' },
   });
@@ -25,8 +28,9 @@ const Login = () => {
     onError(err) {
       message.error(err instanceof Error ? err.message : `${err}`);
     },
-    onSuccess(token) {
+    onSuccess({ token, root }) {
       setToken(token);
+      dispatch(setRoot(root));
       const values = form.getFieldsValue(true) as Values;
       setInitialValues(values.remember ? values : { remember: false, userName: '', password: '' });
       message.success('登录成功');

@@ -1,6 +1,7 @@
-import React, { FC, useEffect, useRef, createElement } from 'react';
-import { render } from 'react-dom';
-import ReactDOM from 'react-dom/client';
+import React, { FC, useEffect, useRef } from 'react';
+// import { useAsyncEffect } from 'ahooks';
+
+import { getDom } from './utils';
 
 interface Props {
   children?: React.ReactNode;
@@ -8,25 +9,20 @@ interface Props {
 
 export const View: FC<Props> = ({ children }) => {
   const ref = useRef<HTMLDivElement>(null);
-  useEffect(
-    () => {
-      const a = ReactDOM.createRoot(document.createElement('div')).render(React.createElement('div', {}));
-      console.log(a);
-    },
-    // const shadow = ref.current!.attachShadow({ mode: 'open' });
-    // React.Children.forEach(children, (item) => {
-    //   console.log(item);
-    // });
+  useEffect(() => {
+    const shadow = ref.current?.shadowRoot ? ref.current.shadowRoot : ref.current!.attachShadow({ mode: 'open' });
+    shadow.innerHTML = '';
 
-    () => {
-      // // ref.current?.remove();
-      // // // ref.current = documen
-      // const App = () => React.createElement('div', {});
-      // console.log(<App />);
-    },
-    [ref, children],
-  );
+    const arr: Array<Promise<string>> = [];
+    React.Children.forEach(children, (item) => {
+      arr.push(getDom(item));
+    });
+    Promise.all(arr).then((data) => {
+      const str = data.reduce((x, y) => x + y, '');
+      shadow.innerHTML = str;
+    });
+  }, [ref, children]);
   return <div ref={ref} />;
 };
 
-export const Style = () => {};
+export const Style: FC<Props> = ({ children }) => <style>{children}</style>;

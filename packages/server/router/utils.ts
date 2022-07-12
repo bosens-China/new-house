@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
+import { OVERDUE } from '../constant/user';
 import db, { Data } from '../model/users';
 
 const key = 'yangboses1008611';
@@ -12,12 +13,17 @@ export const encryption = (str: string) => {
 
 export const sign = (obj: Data) => jwt.sign(obj, key, { expiresIn: '48h' });
 
-export const verify = async (token: string) => {
+export const verify = async (token?: string) => {
+  if (!token) {
+    throw new Error('请输入有效token');
+  }
   let user: Data;
   try {
     user = jwt.verify(token, key) as Data;
   } catch (e) {
-    throw new Error('token已过期');
+    const err = new Error('token已过期') as Error & { OVERDUE: symbol };
+    err.OVERDUE = OVERDUE;
+    throw err;
   }
   const result = await db.findOne({
     password: user.password,

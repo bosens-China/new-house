@@ -20,6 +20,10 @@ export default () => async (ctx: Context, next: Next) => {
   try {
     await next();
   } catch (e: any) {
-    ctx.error(e, 403);
+    // 如果token过期的话
+    if (e.OVERDUE) {
+      return ctx.error(e, 403);
+    }
+    return ctx.error(e);
   }
 };

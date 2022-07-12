@@ -10,9 +10,7 @@ module.exports = {
   parserOptions: {
     project: './tsconfig.json',
   },
-  env: {
-    jest: true,
-  },
+
   plugins: ['import', 'prettier'],
 
   rules: {
