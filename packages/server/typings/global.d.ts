@@ -6,5 +6,7 @@ declare namespace NodeJS {
     MONGO_INITDB_ROOT_PORT: string;
     SUPER_ACCOUNT?: string;
     SUPER_ACCOUNT_PASSWORD?: string;
+    EMAIL_AUTHORIZATION_CODE: string;
+    MAILBOX: string;
   }
 }

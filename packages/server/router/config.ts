@@ -4,6 +4,7 @@ import validator, { Joi } from 'koa-context-validator';
 import _ from 'lodash';
 import { verify } from './utils';
 import db from '../model/config';
+import { DEFAULT_VALUE } from '../constant/config';
 
 const mailbox = new Router<DefaultState, Context>({ prefix: '/config' });
 
@@ -14,7 +15,7 @@ mailbox.get('/crontab', async (ctx) => {
   if (!user.root) {
     return ctx.error(`无权限查看`);
   }
-  const result = await db.findOne({});
+  const result = (await db.findOne({})) || DEFAULT_VALUE;
   return ctx.success(result?.crontab);
 });
 
@@ -24,7 +25,7 @@ mailbox.get('/template', async (ctx) => {
   if (!user.root) {
     return ctx.error(`无权限查看`);
   }
-  const result = await db.findOne({});
+  const result = (await db.findOne({})) || DEFAULT_VALUE;
   return ctx.success(_.pick(result, ['html', 'style'] || {}));
 });
 

@@ -14,9 +14,11 @@
     "koa-router": "^11.0.1",
     "lodash": "^4.17.21",
     "mongoose": "^6.4.4",
+    "node-schedule": "^2.1.0",
     "nodemailer": "^6.7.7",
     "nodemon": "^2.0.19",
     "random-useragent": "^0.5.0",
+    "@types/nodemailer": "^6.4.4",
     "typescript": "^4.7.4"
   },
   "scripts": {
@@ -31,6 +33,7 @@
     "@types/koa-bodyparser": "^4.3.7",
     "@types/koa-router": "^7.4.4",
     "@types/lodash": "^4.14.182",
+    "@types/node-schedule": "^2.1.0",
     "@types/random-useragent": "^0.3.1",
     "jest": "^28.1.2",
     "ts-jest": "^28.0.5"

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Context, Next } from 'koa';
 
 export default () => async (ctx: Context, next: Next) => {
@@ -22,8 +25,9 @@ export default () => async (ctx: Context, next: Next) => {
   } catch (e: any) {
     // 如果token过期的话
     if (e.OVERDUE) {
-      return ctx.error(e, 403);
+      ctx.error(e, 403);
+      return;
     }
-    return ctx.error(e);
+    ctx.error(e);
   }
 };
