@@ -15,7 +15,6 @@ interface Values {
 }
 
 interface Data {
-  index: number;
   // 名称
   name: string;
   // 链接地址
@@ -38,7 +37,6 @@ interface Data {
 
 const falseData: Array<Data> = [
   {
-    index: 0,
     name: '云际轩',
     url: 'http://60.173.254.126:8888/detail/viewscheme/543',
     region: '滨湖区',
@@ -50,7 +48,6 @@ const falseData: Array<Data> = [
     state: '登记结束',
   },
   {
-    index: 1,
     name: '璟峰里',
     url: 'http://60.173.254.126:8888/detail/viewscheme/541',
     region: '包河区',
@@ -83,7 +80,7 @@ const View = () => {
   const code = useMemo(() => {
     try {
       const compiled = _.template(html);
-      const data = compiled({ data: falseData });
+      const data = compiled({ data: falseData, newDate: falseData });
       return data;
     } catch (e) {
       return html;

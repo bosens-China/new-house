@@ -24,11 +24,19 @@ export const region = [
     value: '新站区',
   },
   {
+    label: '经济区',
+    value: '经济区',
+  },
+  {
     label: '政务区',
     value: '政务区',
   },
   {
     label: '滨湖区',
     value: '滨湖区',
+  },
+  {
+    label: '高新区',
+    value: '高新区',
   },
 ];
