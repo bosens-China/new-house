@@ -1,0 +1,13 @@
+{
+  "name": "@new-house/database",
+  "version": "1.0.0",
+  "private": "true",
+  "type": "module",
+  "dependencies": {
+    "mongoose": "^6.9.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./model/*": "./src/model/*.ts"
+  }
+}
