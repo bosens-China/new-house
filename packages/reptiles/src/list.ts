@@ -3,6 +3,7 @@ import { load } from 'cheerio';
 import dayjs from 'dayjs';
 import { Data, List } from '@new-house/database/model/list';
 import 'dayjs/locale/zh-cn';
+import { alone } from '@new-house/speed-limit';
 
 dayjs.locale('zh-cn');
 
@@ -33,7 +34,9 @@ const transformation = (html: string) => {
       enterprise,
       region,
       startTime,
+      startTimeStr: dayjs(startTime).format('YYYY-MM-DD HH:mm:ss'),
       endTime,
+      endTimeStr: dayjs(endTime).format('YYYY-MM-DD HH:mm:ss'),
       total,
       state,
     });
@@ -47,7 +50,35 @@ const getTotal = (html: string) => {
   return Number.parseFloat($('.green-black em').text());
 };
 
+// 每页的数量
+const PAGE_SIZE = 15;
+
 export default async () => {
   const currentList = await List.find({}).lean();
-  // 如果不存在则
+  const html = await alone(getList);
+  const total = getTotal(html);
+  const htmlArr = [html];
+  // 计算还需要更新的页数
+  const page = currentList.length ? Math.ceil((total - currentList.length) / PAGE_SIZE) : 0;
+  if (page <= 0) {
+    console.log(`当前列表值未更新`);
+  }
+  for (let index = 2; index < page; index++) {
+    htmlArr.push(await alone(() => getList(index)));
+  }
+  // 将数组值解析成数组插入到数据库中
+  const values = htmlArr.map((f) => transformation(f)).flat(2);
+  const updateValues = [
+    ...values,
+    ...(currentList.length
+      ? currentList.slice(values.length)
+      : Array.from({
+          length: total - values.length,
+        })
+    ).fill(null),
+  ];
+  await List.remove({});
+  await List.insertMany(updateValues);
+  // 返回此次更新的数据
+  return updateValues.slice(0, total) as Array<Data>;
 };
