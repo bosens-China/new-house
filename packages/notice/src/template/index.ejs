@@ -1,0 +1,15 @@
+<h1>本次新增楼盘 <%= data.length %> 个</h1>
+<ul>
+  <% data.forEach(function(item){ %>
+  <li>
+    <p>项目名称：<a href="<%= item.link %>"><%= item.name %></a></p>
+    <p>楼幢：<%= item.building.join(',') %></p>
+    <p>企业名称：<%= item.length %></p>
+    <p>区域：<%= item.enterprise %></p>
+    <p>登记开始时间：<%= item.startTimeStr %></p>
+    <p>登记结束时间：<%= item.endTimeStr %></p>
+    <p>供应总套数：<%= item.total %></p>
+    <p>登记状态：<%= item.state %></p>
+  </li>
+  <% }); %>
+</ul>
