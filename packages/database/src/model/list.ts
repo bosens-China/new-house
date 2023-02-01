@@ -7,21 +7,25 @@ export interface Data {
   enterprise: string;
   region: string;
   startTime: number;
+  startTimeStr: string;
   endTime: number;
+  endTimeStr: string;
   total: number;
   state: '正在登记' | '暂未开始' | '登记结束';
 }
 
 export const listSchema = new Schema<Data>({
-  name: { type: String, required: true },
-  link: { type: String, required: true },
-  building: { type: [String], required: true },
-  enterprise: { type: String, required: true },
-  region: { type: String, required: true },
-  startTime: { type: Number, required: true },
-  endTime: { type: Number, required: true },
-  total: { type: Number, required: true },
-  state: { type: String, required: true },
+  name: { type: String, required: false },
+  link: { type: String, required: false },
+  building: { type: [String], required: false },
+  enterprise: { type: String, required: false },
+  region: { type: String, required: false },
+  startTime: { type: Number, required: false },
+  endTime: { type: Number, required: false },
+  startTimeStr: { type: String, required: false },
+  endTimeStr: { type: String, required: false },
+  total: { type: Number, required: false },
+  state: { type: String, required: false },
 });
 
 export const List = model<Data>('User', listSchema);
