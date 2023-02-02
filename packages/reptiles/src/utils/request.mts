@@ -1,8 +1,10 @@
 import axios from 'axios';
 import randomUseragent from 'random-useragent';
 
+export const BASE_URL = 'http://60.173.254.126:8888';
+
 const instance = axios.create({
-  baseURL: 'http://60.173.254.126:8888',
+  baseURL: BASE_URL,
   timeout: 10000,
 });
 

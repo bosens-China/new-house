@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { Data, List } from '@new-house/database/model/list';
 import 'dayjs/locale/zh-cn';
 import { alone } from '@new-house/speed-limit';
+import { BASE_URL } from './utils/request.mjs';
 
 dayjs.locale('zh-cn');
 
@@ -26,10 +27,10 @@ const transformation = (html: string) => {
       .map((f) => dayjs(f.trim()).valueOf()) as [number, number];
 
     const total = Number.parseFloat(td.eq(5).text());
-    const state = td.eq(6).text() as Data['state'];
+    const state = td.eq(6).text().trim() as Data['state'];
     arr.push({
       name,
-      link,
+      link: `${BASE_URL}${link}`,
       building,
       enterprise,
       region,
@@ -53,15 +54,16 @@ const getTotal = (html: string) => {
 // 每页的数量
 const PAGE_SIZE = 15;
 
-export default async () => {
+export default async (): Promise<(Data | null)[]> => {
   const currentList = await List.find({}).lean();
   const html = await alone(getList);
   const total = getTotal(html);
   const htmlArr = [html];
   // 计算还需要更新的页数
-  const page = currentList.length ? Math.ceil((total - currentList.length) / PAGE_SIZE) : 0;
+  const page = currentList.length ? Math.ceil((total - currentList.length) / PAGE_SIZE) : 1;
   if (page <= 0) {
     console.log(`当前列表值未更新`);
+    return [];
   }
   for (let index = 2; index < page; index++) {
     htmlArr.push(await alone(() => getList(index)));
@@ -79,6 +81,7 @@ export default async () => {
   ];
   await List.remove({});
   await List.insertMany(updateValues);
+  console.log(`更新列表完成`);
   // 返回此次更新的数据
-  return updateValues.slice(0, total) as Array<Data>;
+  return updateValues.slice(0, currentList.length ? total - currentList.length : values.length) as Array<Data | null>;
 };
