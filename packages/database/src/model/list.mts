@@ -28,4 +28,4 @@ export const listSchema = new Schema<Data>({
   state: { type: String, required: false },
 });
 
-export const List = model<Data>('User', listSchema);
+export const List = model<Data>('List', listSchema);
