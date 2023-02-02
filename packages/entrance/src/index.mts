@@ -2,22 +2,29 @@ import mongoose from 'mongoose';
 import { list } from '@new-house/reptiles';
 import notice from '@new-house/notice';
 import schedule from 'node-schedule';
+import { Mail } from '@new-house/database/model/mail';
+import { Data } from '@new-house/database/model/list';
+import defaultMailbox from './defaultMailbox.mjs';
+import { config } from 'dotenv';
 
-// 开发环境下进行环境变量的导入
-if (process.env.NODE_ENV !== 'production') {
-  const { config } = await import('dotenv');
-  config();
-}
+await config();
 
 const init = async () => {
-  const MONGO_INITDB_ROOT_USERNAME = process.env.MONGO_INITDB_ROOT_USERNAME;
-  const MONGO_INITDB_ROOT_PASSWORD = process.env.MONGO_INITDB_ROOT_PASSWORD;
-  const MONGO_INITDB_ROOT_PORT = process.env.MONGO_INITDB_ROOT_PORT;
+  const { MONGO_INITDB_ROOT_USERNAME, MONGO_INITDB_ROOT_PASSWORD, MONGO_INITDB_ROOT_PORT, MONGO_URL } = process.env;
 
-  await mongoose.connect(
-    `mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@localhost:${MONGO_INITDB_ROOT_PORT}/house`,
-  );
-  console.log(`mongodb 连接成功`);
+  const url =
+    MONGO_URL ||
+    `mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@localhost:${MONGO_INITDB_ROOT_PORT}/house?authSource=admin`;
+  try {
+    await mongoose.connect(url);
+  } catch {
+    throw new Error(`mongodb 连接失败 ${url}`);
+  }
+  console.log(`mongodb 连接成功 ${url}`);
+  const mailbox = await Mail.find({}).lean();
+  if (!mailbox.length) {
+    await Mail.insertMany(defaultMailbox);
+  }
 };
 
 // 是否正在执行中的标示
@@ -25,7 +32,8 @@ let starting = false;
 
 const tasks = async () => {
   const diff = await list();
-  await notice(diff);
+  const values = diff.filter((f) => f && f.state !== '登记结束') as Array<Data>;
+  await notice(values);
 };
 
 const rule = new schedule.RecurrenceRule();
