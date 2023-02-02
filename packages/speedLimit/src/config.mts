@@ -1,4 +1,4 @@
-import type { Options } from './alone.js';
+import type { Options } from './alone.mjs';
 import { reactive } from '@vue/reactivity';
 
 export const defaultOptions = reactive<Required<Options>>({

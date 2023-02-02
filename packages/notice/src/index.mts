@@ -1,4 +1,4 @@
-import template from './template/index.js';
+import template from './template/index.mjs';
 import nodemailer from 'nodemailer';
 import { Data } from '@new-house/database/model/list';
 import { load } from 'cheerio';

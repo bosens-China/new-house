@@ -1,4 +1,4 @@
-import { getList } from './api/index.js';
+import { getList } from './api/index.mjs';
 import { load } from 'cheerio';
 import dayjs from 'dayjs';
 import { Data, List } from '@new-house/database/model/list';

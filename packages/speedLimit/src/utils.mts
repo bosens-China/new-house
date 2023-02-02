@@ -1,5 +1,5 @@
-import type { Options } from './alone.js';
-import { defaultOptions } from './config.js';
+import type { Options } from './alone.mjs';
+import { defaultOptions } from './config.mjs';
 
 export const sleep = (time: number) => {
   return new Promise((resolve) => {

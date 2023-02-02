@@ -2,12 +2,11 @@
   "name": "@new-house/database",
   "version": "1.0.0",
   "private": "true",
-  "type": "module",
   "dependencies": {
     "dotenv": "^16.0.3",
     "mongoose": "^6.9.0"
   },
   "exports": {
-    "./model/*": "./src/model/*.ts"
+    "./model/*": "./src/model/*.mts"
   }
 }

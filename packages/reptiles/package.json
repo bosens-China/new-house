@@ -2,9 +2,8 @@
   "name": "@new-house/reptiles",
   "version": "1.0.0",
   "private": "true",
-  "type": "module",
-  "main": "./src/index.ts",
-  "module": "./src/index.ts",
+  "main": "./src/index.mts",
+  "module": "./src/index.mts",
   "dependencies": {
     "@new-house/database": "workspace:^1.0.0",
     "@new-house/speed-limit": "workspace:^1.0.0",

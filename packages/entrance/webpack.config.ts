@@ -40,9 +40,9 @@ const config: webpack.Configuration = {
     ],
   },
   resolve: {
-    extensions: ['.ts', '.js', '.json'],
+    extensions: ['.ts', '.mts', '.js', '.json'],
     extensionAlias: {
-      '.js': ['.ts', '.js'],
+      // '.js': ['.ts', '.js'],
       '.cjs': ['.cts', '.cjs'],
       '.mjs': ['.mts', '.mjs'],
     },

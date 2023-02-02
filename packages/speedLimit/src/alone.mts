@@ -1,6 +1,6 @@
 // 单独限速
 
-import { getOptions, sleep, getRandomInt } from './utils.js';
+import { getOptions, sleep, getRandomInt } from './utils.mjs';
 
 export type Fn = (...rest: Array<any>) => any;
 

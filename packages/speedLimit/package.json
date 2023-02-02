@@ -2,9 +2,8 @@
   "name": "@new-house/speed-limit",
   "version": "1.0.0",
   "private": "true",
-  "type": "module",
-  "main": "./src/index.ts",
-  "module": "./src/index.ts",
+  "main": "./src/index.mts",
+  "module": "./src/index.mts",
   "dependencies": {
     "@vue/reactivity": "^3.2.45"
   }

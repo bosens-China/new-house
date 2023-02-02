@@ -2,9 +2,8 @@
   "name": "@new-house/notice",
   "version": "1.0.0",
   "private": "true",
-  "type": "module",
-  "main": "./src/index.ts",
-  "module": "./src/index.ts",
+  "main": "./src/index.mts",
+  "module": "./src/index.mts",
   "dependencies": {
     "ejs": "^3.1.8",
     "nodemailer": "^6.9.1",
