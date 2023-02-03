@@ -4,6 +4,8 @@
 
 ## 版本信息
 
+调用 `node build 1.0.0` 即可生成 boses/reptiles:1.0.0
+
 - boses/reptiles:1.0.0
 
 ## 环境变量说明

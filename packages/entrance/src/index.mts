@@ -38,6 +38,9 @@ const tasks = async () => {
 
 const rule = new schedule.RecurrenceRule();
 rule.hour = [11, 15, 20];
+// 必须设置分钟和秒
+rule.minute = 0;
+rule.second = 0;
 
 const implement = () => {
   if (starting) {
