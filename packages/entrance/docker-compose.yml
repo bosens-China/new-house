@@ -13,9 +13,9 @@ services:
     volumes:
       - ./data:/data/db
 
-  reptiles:
-    image: boses/reptiles:1.0.0
-    environment:
-      - MONGO_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo/house?authSource=admin
-    depends_on:
-      - 'mongo'
+  # reptiles:
+  #   image: boses/reptiles:1.0.0
+  #   environment:
+  #     - MONGO_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo/house?authSource=admin
+  #   depends_on:
+  #     - 'mongo'

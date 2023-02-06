@@ -13,6 +13,7 @@
     "random-useragent": "^0.5.0"
   },
   "devDependencies": {
-    "@types/random-useragent": "^0.3.1"
+    "@types/random-useragent": "^0.3.1",
+    "mongoose": "^6.9.0"
   }
 }

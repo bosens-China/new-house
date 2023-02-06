@@ -54,7 +54,7 @@ const getTotal = (html: string) => {
 // 每页的数量
 const PAGE_SIZE = 15;
 
-export default async (): Promise<(Data | null)[]> => {
+export default async () => {
   const currentList = await List.find({}).lean();
   const html = await alone(getList);
   const total = getTotal(html);
@@ -80,8 +80,9 @@ export default async (): Promise<(Data | null)[]> => {
     ).fill(null),
   ];
   await List.remove({});
-  await List.insertMany(updateValues);
+  const returnValues = await List.insertMany(updateValues);
+
   console.log(`更新列表完成`);
   // 返回此次更新的数据
-  return updateValues.slice(0, currentList.length ? total - currentList.length : values.length) as Array<Data | null>;
+  return returnValues.slice(0, currentList.length ? total - currentList.length : values.length);
 };
