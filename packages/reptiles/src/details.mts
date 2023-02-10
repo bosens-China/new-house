@@ -1,6 +1,5 @@
 import { Details, Data, Building } from '@new-house/database/model/details';
 import { List } from '@new-house/database/model/list';
-import { alone } from '@new-house/speed-limit';
 import { getDetails } from './api/index.mjs';
 import { Types } from 'mongoose';
 import { load } from 'cheerio';
@@ -10,7 +9,7 @@ const getTextDetails = (str: string) => {
   return str.trim().split('：')[1] as string;
 };
 
-const transformation = (html: string): Omit<Data, 'parentId'> => {
+export const transformation = (html: string): Omit<Data, 'parentId'> => {
   const $ = load(html, null, false);
   // 刚需供应数量
   const optionalNumber = Number.parseFloat(getTextDetails($('.lbox dd').eq(3).text()));
@@ -47,12 +46,14 @@ export default async (id: Types.ObjectId) => {
     return;
   }
   const { link } = result;
-  const html = await alone(() => getDetails(link));
+  const html = await getDetails(link);
   const rest = transformation(html);
-  await Details.insertMany([
+
+  const values = await Details.insertMany([
     {
       ...rest,
       parentId: id,
     },
   ]);
+  return values;
 };

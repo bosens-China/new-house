@@ -3,18 +3,18 @@ import { load } from 'cheerio';
 import dayjs from 'dayjs';
 import { Data, List } from '@new-house/database/model/list';
 import 'dayjs/locale/zh-cn';
-import { alone } from '@new-house/speed-limit';
 import { BASE_URL } from './utils/request.mjs';
 
 dayjs.locale('zh-cn');
 
 // 将html转化为json
-const transformation = (html: string) => {
+export const transformation = (html: string) => {
   const $ = load(html, null, false);
   const arr: Array<Data> = [];
   const tr = $('tr:not(.table_bg)');
   tr.each((i, el) => {
     const td = $(el).find('td');
+    const id = td.eq(0).find('span').text().trim();
     const name = td.eq(0).find('a').text().trim();
     const link = td.eq(0).find('a').attr('href') || '';
     const building = td.eq(1).text().trim().split(',');
@@ -29,6 +29,7 @@ const transformation = (html: string) => {
     const total = Number.parseFloat(td.eq(5).text());
     const state = td.eq(6).text().trim() as Data['state'];
     arr.push({
+      id,
       name,
       link: `${BASE_URL}${link}`,
       building,
@@ -46,7 +47,7 @@ const transformation = (html: string) => {
 };
 
 // 获取总数
-const getTotal = (html: string) => {
+export const getTotal = (html: string) => {
   const $ = load(html, null, false);
   return Number.parseFloat($('.green-black em').text());
 };
@@ -56,7 +57,7 @@ const PAGE_SIZE = 15;
 
 export default async () => {
   const currentList = await List.find({}).lean();
-  const html = await alone(getList);
+  const html = await getList();
   const total = getTotal(html);
   const htmlArr = [html];
   // 计算还需要更新的页数
@@ -66,20 +67,20 @@ export default async () => {
     return [];
   }
   for (let index = 2; index < page; index++) {
-    htmlArr.push(await alone(() => getList(index)));
+    htmlArr.push(await getList(index));
   }
-  // 将数组值解析成数组插入到数据库中
+  // 讲更新的值插入数组中
   const values = htmlArr.map((f) => transformation(f)).flat(2);
   const updateValues = [
     ...values,
     ...(currentList.length
-      ? currentList.slice(values.length)
+      ? []
       : Array.from({
           length: total - values.length,
         })
     ).fill(null),
   ];
-  await List.remove({});
+
   const returnValues = await List.insertMany(updateValues);
 
   console.log(`更新列表完成`);
