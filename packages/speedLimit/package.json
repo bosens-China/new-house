@@ -3,8 +3,5 @@
   "version": "1.0.0",
   "private": "true",
   "main": "./src/index.mts",
-  "module": "./src/index.mts",
-  "dependencies": {
-    "@vue/reactivity": "^3.2.45"
-  }
+  "module": "./src/index.mts"
 }
