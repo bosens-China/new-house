@@ -7,7 +7,8 @@
 调用 `node build 1.0.0` 即可生成 boses/reptiles:1.0.0
 
 - boses/reptiles:1.0.0
+- boses/reptiles:1.0.1
 
 ## 环境变量说明
 
-参考 [environment.d](./environment.d) 文件
+参考 [environment.d](./environment.d.ts) 文件
