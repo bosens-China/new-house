@@ -1,4 +1,4 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model, Types, Require_id } from 'mongoose';
 
 export interface Building {
   licence: string;
@@ -17,6 +17,7 @@ export interface Data {
 export const buildingSchema = new Schema<Building>({
   licence: { type: String, required: true },
   name: { type: String, required: true },
+  link: { type: String, required: true },
 });
 
 export const detailsSchema = new Schema<Data>({
@@ -34,3 +35,4 @@ export const detailsSchema = new Schema<Data>({
 });
 
 export const Details = model<Data>('details', detailsSchema);
+export type RootData = Require_id<Data>;

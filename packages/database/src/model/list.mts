@@ -1,6 +1,7 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Require_id } from 'mongoose';
 
 export interface Data {
+  id: string;
   name: string;
   link: string;
   building: Array<string>;
@@ -15,6 +16,7 @@ export interface Data {
 }
 
 export const listSchema = new Schema<Data>({
+  id: { type: String, required: false },
   name: { type: String, required: false },
   link: { type: String, required: false },
   building: { type: [String], required: false },
@@ -29,3 +31,4 @@ export const listSchema = new Schema<Data>({
 });
 
 export const List = model<Data>('List', listSchema);
+export type RootData = Require_id<Data>;
