@@ -58,7 +58,7 @@ const config: webpack.Configuration = {
     }),
   ],
   optimization: {
-    minimize: false,
+    minimize: true,
     splitChunks: {
       cacheGroups: {
         cheerio: {
