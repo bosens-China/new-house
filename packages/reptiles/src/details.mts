@@ -3,6 +3,7 @@ import { List } from '@new-house/database/model/list';
 import { getDetails } from './api/index.mjs';
 import { Types } from 'mongoose';
 import { load } from 'cheerio';
+import { BASE_URL } from './utils/request.mjs';
 
 // 列表返回的是刚需供应数：22形式，获取：之后的内容
 const getTextDetails = (str: string) => {
@@ -24,7 +25,7 @@ export const transformation = (html: string): Omit<Data, 'parentId'> => {
     // 预售许可证号：20221251,楼幢：1-G3幢
     const [, licence, name] = txt.match(/[\s\S]+：(.+?),[\s\S]+：(.+?)$/) as [string, string, string];
     building.push({
-      link,
+      link: `${BASE_URL}${link}`,
       name,
       licence,
     });

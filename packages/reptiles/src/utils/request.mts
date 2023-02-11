@@ -5,7 +5,7 @@ export const BASE_URL = 'http://60.173.254.126:8888';
 
 const instance = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  timeout: 20000,
 });
 
 // 添加请求拦截器

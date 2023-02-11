@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { load } from 'cheerio';
 import dayjs from 'dayjs';
 import { getBuilding, getHouses } from './api/index.mjs';
 import { group } from '@new-house/speed-limit';
 import { housingSupplement } from '@new-house/database/model/building';
 import { Building, Data } from '@new-house/database/model/building';
+import ProgressBar from 'progress';
 
 export const transformation = (html: string) => {
   const $ = load(html, null, false);
@@ -58,17 +60,21 @@ export const transformation = (html: string) => {
 export default async (link: string) => {
   const html = await getBuilding(link);
   const { layers, ...rest } = transformation(html);
-  const all = await group(
-    layers.map((f) => {
-      return () => getHouses(f);
-    }),
-    {
-      onChange(index, total) {
-        console.log(`当前爬取楼幢进度：${+(index / total).toFixed(2) * 100}%`);
-      },
-      time: '0',
+  const tasks = layers.map((f) => {
+    return () => getHouses(f);
+  });
+  const bar = new ProgressBar('本次爬取楼幢进度：[:bar] :percent', {
+    complete: '=',
+    incomplete: ' ',
+    total: tasks.length,
+    clear: true,
+  });
+  const all = await group(tasks, {
+    onChange(index) {
+      bar.tick(index + 1);
     },
-  );
+    time: '0',
+  });
   // 过滤一下，只计算可售的
   const sort = all
     .filter((f) => {
@@ -94,6 +100,5 @@ export default async (link: string) => {
     averagePrice,
     parentLink: link,
   };
-
   await Building.insertMany([obj]);
 };
