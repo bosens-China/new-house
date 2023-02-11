@@ -1,14 +1,14 @@
 import template from './template/index.mjs';
 import nodemailer from 'nodemailer';
-import { Data } from '@new-house/database/model/list';
+import { RootData } from '@new-house/database/model/list';
 import { load } from 'cheerio';
 import { Mail } from '@new-house/database/model/mail';
 
-export default async (data: Array<Data>) => {
+export default async (data: Array<RootData>) => {
   if (!data.length) {
     return;
   }
-  const html = template(data);
+  const html = await template(data);
   const { EMAIL_ACCOUNT, EMAIL_AUTHORIZATION_CODE } = process.env;
 
   const transporter = nodemailer.createTransport({

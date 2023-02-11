@@ -2,14 +2,56 @@
 <ul>
   <% data.forEach(function(item){ %>
   <li>
-    <p>项目名称：<a href="<%= item.link %>"><%= item.name %></a></p>
-    <p>楼幢：<%= item.building.join(',') %></p>
-    <p>企业名称：<%= item.length %></p>
-    <p>区域：<%= item.enterprise %></p>
+    <p>项目名称：<%= item.name %><a href="<%= item.link %>"></a></p>
+    <p>企业名称：<%= item.enterprise %></p>
+    <p>区域：<%= item.region %></p>
     <p>登记开始时间：<%= item.startTimeStr %></p>
     <p>登记结束时间：<%= item.endTimeStr %></p>
     <p>供应总套数：<%= item.total %></p>
     <p>登记状态：<%= item.state %></p>
+    <p>
+      <details>
+        <summary>楼幢：</summary>
+        <ul style="margin: 0; padding: 0 0 0 16px">
+          <% item.building.forEach(function(li){ %>
+          <li>
+            <p>许可证：<%= li.licence %></p>
+          </li>
+          <li>
+            <p>名称：<%= li.name %></p>
+          </li>
+          <li>
+            <p>均价：<%= priceText(li.averagePrice) %></p>
+          </li>
+          <li>
+            <p>最低价：<%= priceDescription(li.lowestPrice) %></p>
+          </li>
+          <li>
+            <p>最高价：<%= priceDescription(li.highestPrice) %></p>
+          </li>
+          <li>
+            <p>
+              <a href="<%= li.link %>"> 点击跳转楼幢详情 </a>
+            </p>
+          </li>
+          <% }); %>
+        </ul>
+      </details>
+    </p>
   </li>
   <% }); %>
 </ul>
+
+<style>
+  ul li {
+    list-style: none;
+    border-bottom: 1px solid #e5e6eb;
+  }
+  ul li:last-child {
+    border-bottom: none;
+  }
+
+  details li {
+    border-bottom: none;
+  }
+</style>
