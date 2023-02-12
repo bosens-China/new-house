@@ -33,5 +33,4 @@ export default async (data: Array<RootData>) => {
     text,
     html,
   });
-  console.log(`已成功发送邮件`);
 };

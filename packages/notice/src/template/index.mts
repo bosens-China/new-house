@@ -18,7 +18,7 @@ const priceDescription = (price: housingSupplement) => {
 export default async (data: Array<RootData>) => {
   const newData: Array<CurrentType> = [];
   for (const item of data) {
-    const details = await Details.findOne({ parentId: item._id }).lean();
+    const details = await Details.findOne({ parentId: item.id }).lean();
     if (!details) {
       continue;
     }
@@ -36,7 +36,6 @@ export default async (data: Array<RootData>) => {
       ...details,
     } as any);
   }
-
   newData.map((f) => f.building.map((f) => f.averagePrice));
   const html = ejs.render(template, { data: newData, priceText, priceDescription });
 
