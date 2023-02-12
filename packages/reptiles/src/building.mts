@@ -5,7 +5,6 @@ import { getBuilding, getHouses } from './api/index.mjs';
 import { group } from '@new-house/speed-limit';
 import { housingSupplement } from '@new-house/database/model/building';
 import { Building, Data } from '@new-house/database/model/building';
-import ProgressBar from 'progress';
 
 export const transformation = (html: string) => {
   const $ = load(html, null, false);
@@ -36,7 +35,7 @@ export const transformation = (html: string) => {
   // 返回所有层的信息，注意是有id的
   const layers = $('.cursor')
     .map((i, el) => {
-      const key = $(el).attr('onclick')?.match(/\d+/g)?.[0] || '';
+      const key: string = $(el).attr('onclick')?.match(/\d+/g)?.[0] || '';
       return key;
     })
     .toArray()
@@ -63,42 +62,39 @@ export default async (link: string) => {
   const tasks = layers.map((f) => {
     return () => getHouses(f);
   });
-  const bar = new ProgressBar('本次爬取楼幢进度：[:bar] :percent', {
-    complete: '=',
-    incomplete: ' ',
-    total: tasks.length,
-    clear: true,
-  });
-  const all = await group(tasks, {
-    onChange(index) {
-      bar.tick(index + 1);
-    },
-    time: '0',
-  });
-  // 过滤一下，只计算可售的
-  const sort = all
-    .filter((f) => {
-      return f.iPrice && f.lbBuildArea && f.lbSellFlag === '可售';
-    })
-    .map((f) => {
-      return {
-        ...f,
-        price: Number.parseFloat(f.iPrice) * Number.parseFloat(f.lbBuildArea),
+  return {
+    tasks,
+    async actuator(onChange: () => void) {
+      const all = await group(tasks, {
+        time: '0',
+        onChange,
+      });
+      // 过滤一下，只计算可售的
+      const sort = all
+        .filter((f) => {
+          return f.iPrice && f.lbBuildArea && f.lbSellFlag === '可售';
+        })
+        .map((f) => {
+          return {
+            ...f,
+            price: Number.parseFloat(f.iPrice) * Number.parseFloat(f.lbBuildArea),
+          };
+        })
+        .sort((x, y) => x.price - y.price);
+      // 计算最高价，最低价和均价
+      const lowestPrice: housingSupplement = sort.at(0)!;
+      // 最高价
+      const highestPrice: housingSupplement = sort.at(-1)!;
+      // 均价
+      const averagePrice: number = sort.reduce((x, y) => (x += y.price), 0) / sort.length;
+      const obj: Data = {
+        ...rest,
+        lowestPrice,
+        highestPrice,
+        averagePrice,
+        parentLink: link,
       };
-    })
-    .sort((x, y) => x.price - y.price);
-  // 计算最高价，最低价和均价
-  const lowestPrice: housingSupplement = sort.at(0)!;
-  // 最高价
-  const highestPrice: housingSupplement = sort.at(-1)!;
-  // 均价
-  const averagePrice: number = sort.reduce((x, y) => (x += y.price), 0) / sort.length;
-  const obj: Data = {
-    ...rest,
-    lowestPrice,
-    highestPrice,
-    averagePrice,
-    parentLink: link,
+      await Building.insertMany([obj]);
+    },
   };
-  await Building.insertMany([obj]);
 };

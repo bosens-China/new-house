@@ -1,7 +1,6 @@
 import { Details, Data, Building } from '@new-house/database/model/details';
 import { List } from '@new-house/database/model/list';
 import { getDetails } from './api/index.mjs';
-import { Types } from 'mongoose';
 import { load } from 'cheerio';
 import { BASE_URL } from './utils/request.mjs';
 
@@ -41,8 +40,8 @@ export const transformation = (html: string): Omit<Data, 'parentId'> => {
 /*
  * 把列表的值进行额外补充
  */
-export default async (id: Types.ObjectId) => {
-  const result = await List.findOne({ _id: id });
+export default async (id: string) => {
+  const result = await List.findOne({ id });
   if (!result) {
     return;
   }

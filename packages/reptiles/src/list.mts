@@ -60,10 +60,11 @@ export default async () => {
   const html = await getList();
   const total = getTotal(html);
   const htmlArr = [html];
+  // 需要插入的条数
+  const updateQuantity = total - currentList.length;
   // 计算还需要更新的页数
-  const page = currentList.length ? Math.ceil((total - currentList.length) / PAGE_SIZE) : 1;
+  const page = currentList.length ? Math.ceil(updateQuantity / PAGE_SIZE) : 1;
   if (page <= 0) {
-    console.log(`当前列表值未更新`);
     return [];
   }
   for (let index = 2; index < page; index++) {
@@ -72,7 +73,8 @@ export default async () => {
   // 讲更新的值插入数组中
   const values = htmlArr.map((f) => transformation(f)).flat(2);
   const updateValues = [
-    ...values,
+    // 这里需要注意，如果是插入模式则只更新指定数量
+    ...(currentList.length ? values.slice(0, updateQuantity) : values),
     ...(currentList.length
       ? []
       : Array.from({
@@ -82,8 +84,6 @@ export default async () => {
   ];
 
   const returnValues = await List.insertMany(updateValues);
-
-  console.log(`更新列表完成`);
   // 返回此次更新的数据
-  return returnValues.slice(0, currentList.length ? total - currentList.length : values.length);
+  return returnValues.slice(0, currentList.length ? total - currentList.length : values.length).map((f) => f.toJSON());
 };
