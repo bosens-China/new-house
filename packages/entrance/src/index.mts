@@ -3,6 +3,7 @@ import { list, details, building } from '@new-house/reptiles';
 import notice from '@new-house/notice';
 import schedule from 'node-schedule';
 import { Mail } from '@new-house/database/model/mail';
+// import { List } from '@new-house/database/model/list';
 import defaultMailbox from './defaultMailbox.mjs';
 import { config } from 'dotenv';
 import { group } from '@new-house/speed-limit';
@@ -35,9 +36,14 @@ const tasks = async () => {
   console.time('列表爬取时长');
   const diff = await list();
   const values = diff.filter((f) => f && f.state !== '登记结束');
+  if (!values.length) {
+    console.log(`当前列表值未更新`);
+    return;
+  }
+  console.log(`更新列表完成`);
   // 添加详情
   const detailValues = await group(
-    values.map((f) => () => details(f._id)),
+    values.map((f) => () => details(f.id)),
     { time: '0' },
   );
   console.log(`更新详情完成`);
@@ -46,25 +52,49 @@ const tasks = async () => {
     .flat(3)
     .filter((f) => f) as Array<string>;
 
-  const bar = new ProgressBar('[:bar] :percent :elapseds', {
+  const buildingbar = new ProgressBar('爬取楼幢页面 [:bar] :percent :elapseds', {
     complete: '=',
     incomplete: ' ',
     total: links.length,
-    clear: true,
+    // clear: true,
+    width: 50,
+  });
+  const allBuilding = await group(
+    links.map((f) => () => building(f)),
+    {
+      time: '0',
+      onChange() {
+        buildingbar.tick();
+      },
+    },
+  );
+
+  const total = allBuilding.reduce((x, item) => {
+    return x + item.tasks.length;
+  }, 0);
+  const priceBar = new ProgressBar('爬取楼幢价格 [:bar] :current/:total :percent  :elapseds', {
+    complete: '=',
+    incomplete: ' ',
+    total,
+    // clear: true,
+    width: 50,
+  });
+  const onChange = () => {
+    priceBar.tick();
+  };
+  const priceTasks = allBuilding.reduce((arr, item) => {
+    arr.push(() => item.actuator(onChange));
+    return arr;
+  }, [] as (() => Promise<void>)[]);
+
+  await group(priceTasks, {
+    time: '0',
   });
 
-  await group(
-    links.map(
-      (f) => () =>
-        building(f).then((data) => {
-          bar.tick();
-          return data;
-        }),
-    ),
-    { time: '0' },
-  );
   console.log(`更新楼幢完成`);
+
   await notice(values);
+  console.log(`已成功发送邮件`);
   console.timeEnd('列表爬取时长');
 };
 
