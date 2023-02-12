@@ -8,6 +8,7 @@
 
 - boses/reptiles:1.0.0
 - boses/reptiles:1.0.1
+- boses/reptiles:1.0.2
 
 ## 环境变量说明
 
