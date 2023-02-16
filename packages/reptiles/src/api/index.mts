@@ -1,19 +1,18 @@
 import request from '../utils/request.mjs';
-import { alone } from '@new-house/speed-limit';
 import { Houses } from '@new-house/database/model/building';
 
 export const getList = async (page = 1) => {
-  const { data } = await alone(() => request.get<string>(`/?p=${page}&xmmc=&qy=&djzt=`));
+  const { data } = await request.get<string>(`/?p=${page}&xmmc=&qy=&djzt=`);
   return data;
 };
 
 export const getDetails = async (url: string) => {
-  const { data } = await alone(() => request.get<string>(url));
+  const { data } = await request.get<string>(url);
   return data;
 };
 
 export const getBuilding = async (url: string) => {
-  const { data } = await alone(() => request.get<string>(url));
+  const { data } = await request.get<string>(url);
   return data;
 };
 
@@ -21,10 +20,10 @@ export const getBuilding = async (url: string) => {
 export const getHouses = async (key: string) => {
   const {
     data: { id },
-  } = await alone(() => request.get<{ id: string; state: boolean }>(`/details/getrsa/${nscaler(key)}`));
+  } = await request.get<{ id: string; state: boolean }>(`/details/getrsa/${nscaler(key)}`);
   const {
     data: { data },
-  } = await alone(() => request.get<{ data: Houses; state: boolean }>(`/details/house/${id}`));
+  } = await request.get<{ data: Houses; state: boolean }>(`/details/house/${id}`);
   return data;
 };
 

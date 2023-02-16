@@ -66,7 +66,6 @@ export default async (link: string) => {
     tasks,
     async actuator(onChange: () => void) {
       const all = await group(tasks, {
-        time: '0',
         onChange,
       });
       // 过滤一下，只计算可售的
