@@ -1,6 +1,6 @@
-import { alone, Fn, Options } from './alone.mjs';
+import { Fn } from './alone.mjs';
 
-export interface currentOptions extends Options {
+export interface currentOptions {
   onChange: (index: number, total: number) => void;
 }
 
@@ -12,7 +12,7 @@ export const group = async <T extends Fn>(arr: Array<T>, options: Partial<curren
     if (typeof el !== 'function') {
       throw new Error(`The value passed for group is not a function!`);
     }
-    const result = await alone(el, options);
+    const result = await el(options);
     if (typeof onChange === 'function') {
       onChange(i, arr.length);
     }

@@ -1,22 +1,25 @@
 // 单独限速
 
-import { getOptions, sleep, getRandomInt } from './utils.mjs';
+import { sleep, getRandomInt } from './utils.mjs';
 
 export type Fn = (...rest: Array<any>) => any;
 
 export interface Options {
-  time: string;
+  time: string | number;
 }
 
 export const alone = async <T extends Fn>(fn: T, options: Partial<Options> = {}): Promise<ReturnType<T>> => {
-  const { time } = getOptions(options);
-  const [min, max = min] = time
-    .split('-')
-    .map((f) => Number(f) || 0)
-    .sort((x, y) => x - y);
+  const time = options.time ?? 100;
+  const [min, max = min] = (
+    typeof time === 'string'
+      ? time
+          .split('-')
+          .map((f) => Number(f) || 0)
+          .sort((x, y) => x - y)
+      : [time, time]
+  ) as [number, number];
 
-  const randomInt = getRandomInt(min, max);
-  await sleep(randomInt);
+  await sleep(getRandomInt(min, max));
   const result = await fn();
   return result;
 };
