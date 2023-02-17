@@ -1,6 +1,7 @@
 import axios, { AxiosProxyConfig } from 'axios';
 import { alone } from '@new-house/speed-limit';
 import randomUseragent from 'random-useragent';
+import { getTotal } from '../list.mjs';
 
 interface Type {
   anonymous: string;
@@ -14,13 +15,16 @@ interface Type {
   source: string;
 }
 
+type ProxyConfig = Pick<AxiosProxyConfig, 'host' | 'port'> & { runTime: number };
+
 /*
  * 作用就是生成一个可以使用的代理地址
  */
 class Agent {
-  private list: Map<string, Type & { runTime: number } & AxiosProxyConfig> = new Map();
+  private list: Map<string, Type & ProxyConfig> = new Map();
   public interval = 6000;
-  // 获取全部
+
+  // 获取全部代理池数据
   private async getAvailableAgents() {
     const { PROXY_ADDRESS } = process.env;
     const { data } = await axios.get<Array<Type>>(`${PROXY_ADDRESS}/all/`);
@@ -46,6 +50,7 @@ class Agent {
     };
 
     try {
+      const current = new Date().valueOf();
       const { data } = await axios.get<string>(`http://60.173.254.126:8888`, {
         proxy,
         headers: {
@@ -53,66 +58,101 @@ class Agent {
         },
         timeout: this.interval,
       });
+      // 验证返回的html是否正确
+      if (!getTotal(data)) {
+        return false;
+      }
+      const end = new Date().valueOf();
       return {
         ...proxy,
-        html: data,
+        runEndTime: end - current,
       };
     } catch {
       return false;
     }
   }
 
+  async init() {
+    if (this.list.size > 3) {
+      return;
+    }
+    // console.log(`正在获取可用代理地址...`);
+    const arr = [...(await this.getAvailableAgents())];
+
+    // 直接测试是否可以使用
+    const values = await Promise.all(
+      arr.map((f) => {
+        return this.asynctesting(f).then((e) => {
+          if (e) {
+            return f;
+          }
+          return null;
+        });
+      }),
+    );
+    const current = new Date().valueOf();
+    values
+      .filter((f): f is Type & ProxyConfig => f !== null)
+      .forEach(({ proxy, ...rest }) => {
+        this.list.set(proxy, {
+          ...rest,
+          runTime: current,
+          proxy,
+        });
+      });
+
+    if (!this.list.size || this.list.size < 3) {
+      if (!this.list.size) {
+        await alone(
+          () => {
+            //
+          },
+          { time: 5000 },
+        );
+        await this.init();
+        return;
+      }
+    }
+    // console.log(`更新代理地址成功`);
+  }
+
   // 获取一个可用的proxy配置项
   async obtain(): Promise<{
-    html: string;
     host: string;
     port: number;
   }> {
+    console.log(`当前代理池数量：${this.list.size}`);
     await this.init();
     const current = new Date().valueOf();
-    for (const [name, value] of this.list) {
-      if (!value.runTime || current - value.runTime >= this.interval) {
-        const r = await this.asynctesting(value);
-        if (r) {
-          // 可以访问，更新下时间
-          this.list.set(name, {
-            ...value,
-            runTime: current,
-          });
-
-          return r;
-          // return value.proxy;
-        } else {
-          this.list.delete(name);
-        }
+    const sort = [...this.list.values()].sort((x, y) => x.runTime - y.runTime);
+    for (const item of sort) {
+      const { port, host, runTime } = item;
+      if (!runTime || current - runTime >= this.interval) {
+        item.runTime = current;
+        return {
+          host,
+          port,
+        };
       }
     }
     await alone(
       () => {
         //
       },
-      { time: '100' },
+      { time: 100 },
     );
     return this.obtain();
   }
 
-  // 刷新列表值
-  private async refreshList() {
-    const arr = await this.getAvailableAgents();
-    for (const values of arr) {
-      const { proxy } = values;
-      if (!this.list.has(proxy)) {
-        this.list.set(proxy, { ...values, runTime: 0 });
-      }
-    }
+  constructor() {
+    // 每次任务开始就清理一下
+    process.on('taskStart', () => {
+      this.list.clear();
+    });
   }
 
-  // 程序递归初始化，给list进行赋值
-  private async init() {
-    if (this.list.size >= 50) {
-      return;
-    }
-    await this.refreshList();
+  invalidCleanup({ host, port }: Pick<AxiosProxyConfig, 'host' | 'port'>) {
+    this.list.delete(`${host}:${port}`);
   }
 }
 

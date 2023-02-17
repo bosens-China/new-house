@@ -1,7 +1,7 @@
 import axios from 'axios';
 import randomUseragent from 'random-useragent';
 import { alone } from '@new-house/speed-limit';
-import proxy from './config.mjs';
+import proxy from './proxy.mjs';
 
 export const BASE_URL = 'http://60.173.254.126:8888';
 
@@ -11,22 +11,32 @@ const instance = axios.create({
 });
 
 // 添加请求拦截器
-instance.interceptors.request.use(
-  async function (config) {
-    config.headers.setUserAgent(randomUseragent.getRandom());
-    // 设置代理
-    config.proxy = proxy;
-    await alone(
-      () => {
-        //
-      },
-      { time: '6000-14000' },
-    );
-    return config;
+instance.interceptors.request.use(async function (config) {
+  config.headers.setUserAgent(randomUseragent.getRandom());
+  // 设置代理
+  config.proxy = await proxy.obtain();
+  await alone(
+    () => {
+      //
+    },
+    { time: '6000-14000' },
+  );
+  return config;
+});
+
+// 添加响应拦截器
+instance.interceptors.response.use(
+  function (response) {
+    // 对响应数据做点什么
+    return response;
   },
-  function (error) {
-    // 对请求错误做些什么
-    return Promise.reject(error);
+  async function (error) {
+    if (!error?.config?.proxy) {
+      return error;
+    }
+
+    proxy.invalidCleanup(error.config.proxy);
+    return instance(error.config);
   },
 );
 

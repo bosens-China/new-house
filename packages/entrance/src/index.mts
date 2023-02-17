@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { list, details, building, proxyConfig, proxy } from '@new-house/reptiles';
+import { list, details, building } from '@new-house/reptiles';
 import notice from '@new-house/notice';
 import schedule from 'node-schedule';
 import { Mail } from '@new-house/database/model/mail';
@@ -33,13 +33,10 @@ const init = async () => {
 let starting = false;
 
 const tasks = async () => {
-  console.log(`正在获取可用代理地址...`);
-  // 获取可以使用的代理地址
-  const { html, ...newProxy } = await proxy.obtain();
-  Object.assign(proxyConfig, newProxy);
-  console.log(`更新代理地址成功 ${JSON.stringify(newProxy)}`);
+  process.emit('taskStart' as any);
+
   console.time('列表爬取时长');
-  const diff = await list(html);
+  const diff = await list();
   const values = diff.filter((f) => f && f.state !== '登记结束');
   if (!values.length) {
     console.log(`当前列表值未更新`);
