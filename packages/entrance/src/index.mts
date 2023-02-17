@@ -33,8 +33,6 @@ const init = async () => {
 let starting = false;
 
 const tasks = async () => {
-  process.emit('taskStart' as any);
-
   console.time('列表爬取时长');
   const diff = await list();
   const values = diff.filter((f) => f && f.state !== '登记结束');
@@ -70,7 +68,7 @@ const tasks = async () => {
   const total = allBuilding.reduce((x, item) => {
     return x + item.tasks.length;
   }, 0);
-  const priceBar = new ProgressBar('爬取楼幢价格 [:bar] :current/:total :percent  :elapseds', {
+  const priceBar = new ProgressBar('爬取楼幢价格 [:bar] :current/:total :percent :rate :elapseds 预计完成时间：:etas', {
     complete: '=',
     incomplete: ' ',
     total,
@@ -105,6 +103,7 @@ const implement = () => {
     return;
   }
   starting = true;
+  process.emit('taskStart' as any);
   tasks()
     .catch((e) => {
       console.error(e);

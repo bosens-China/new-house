@@ -10,6 +10,7 @@
 - boses/reptiles:1.0.1
 - boses/reptiles:1.0.2
 - boses/reptiles:1.0.3
+- boses/reptiles:1.0.4
 
 ## 环境变量说明
 

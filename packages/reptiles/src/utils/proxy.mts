@@ -76,13 +76,11 @@ class Agent {
   // 获取随机间隔
   interval() {
     const size = this.list.size;
-    return Math.min(getRandomInt(7500 / size, 7500 / (size / 2)), 1000);
+    // 每个任务2-4s请求一次
+    return Math.min(getRandomInt(6000 / size, 1200 / size), 1000);
   }
 
   async init() {
-    if (this.list.size > 3) {
-      return;
-    }
     // console.log(`正在获取可用代理地址...`);
     const arr = [...(await this.getAvailableAgents())];
 
@@ -108,18 +106,17 @@ class Agent {
         });
       });
 
-    if (!this.list.size || this.list.size < 3) {
-      if (!this.list.size) {
-        await alone(
-          () => {
-            //
-          },
-          { time: 5000 },
-        );
-        await this.init();
-        return;
-      }
+    if (!this.list.size) {
+      await alone(
+        () => {
+          //
+        },
+        { time: 3000 },
+      );
+      await this.init();
+      return;
     }
+
     // console.log(`更新代理地址成功`);
   }
 
