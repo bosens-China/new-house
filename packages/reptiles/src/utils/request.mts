@@ -15,11 +15,12 @@ instance.interceptors.request.use(async function (config) {
   config.headers.setUserAgent(randomUseragent.getRandom());
   // 设置代理
   config.proxy = await proxy.obtain();
+
   await alone(
     () => {
       //
     },
-    { time: '6000-14000' },
+    { time: proxy.interval() },
   );
   return config;
 });

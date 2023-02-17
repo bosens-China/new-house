@@ -111,6 +111,7 @@ const implement = () => {
     })
     .finally(() => {
       starting = false;
+      process.emit('taskEnd' as any);
     });
 };
 

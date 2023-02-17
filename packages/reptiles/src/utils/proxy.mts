@@ -1,7 +1,8 @@
 import axios, { AxiosProxyConfig } from 'axios';
-import { alone } from '@new-house/speed-limit';
+import { alone, getRandomInt } from '@new-house/speed-limit';
 import randomUseragent from 'random-useragent';
 import { getTotal } from '../list.mjs';
+// import ora from 'ora';
 
 interface Type {
   anonymous: string;
@@ -21,8 +22,8 @@ type ProxyConfig = Pick<AxiosProxyConfig, 'host' | 'port'> & { runTime: number }
  * 作用就是生成一个可以使用的代理地址
  */
 class Agent {
-  private list: Map<string, Type & ProxyConfig> = new Map();
-  public interval = 6000;
+  public list: Map<string, Type & ProxyConfig> = new Map();
+  // private spinner = ora('加载代理池中...');
 
   // 获取全部代理池数据
   private async getAvailableAgents() {
@@ -56,7 +57,7 @@ class Agent {
         headers: {
           'User-Agent': randomUseragent.getRandom(),
         },
-        timeout: this.interval,
+        timeout: 6000,
       });
       // 验证返回的html是否正确
       if (!getTotal(data)) {
@@ -70,6 +71,12 @@ class Agent {
     } catch {
       return false;
     }
+  }
+
+  // 获取随机间隔
+  interval() {
+    const size = this.list.size;
+    return Math.min(getRandomInt(7500 / size, 7500 / (size / 2)), 1000);
   }
 
   async init() {
@@ -121,13 +128,14 @@ class Agent {
     host: string;
     port: number;
   }> {
-    console.log(`当前代理池数量：${this.list.size}`);
+    // this.spinner.text = `当前代理池数量为：${this.list.size} \n`;
+
     await this.init();
     const current = new Date().valueOf();
     const sort = [...this.list.values()].sort((x, y) => x.runTime - y.runTime);
     for (const item of sort) {
       const { port, host, runTime } = item;
-      if (!runTime || current - runTime >= this.interval) {
+      if (!runTime || current - runTime >= this.interval()) {
         item.runTime = current;
         return {
           host,
@@ -148,6 +156,10 @@ class Agent {
     // 每次任务开始就清理一下
     process.on('taskStart', () => {
       this.list.clear();
+      // this.spinner.start();
+    });
+    process.on('taskEnd', () => {
+      // this.spinner.stop();
     });
   }
 
