@@ -4,6 +4,7 @@ const defaultMailbox: Array<Data> = [
   {
     mailbox: '1123598783@qq.com',
     disable: false,
+    ceilingPrice: 2200000,
   },
 ];
 

@@ -33,7 +33,6 @@ const init = async () => {
 let starting = false;
 
 const tasks = async () => {
-  console.time('列表爬取时长');
   const diff = await list();
   const values = diff.filter((f) => f && f.state !== '登记结束');
   if (!values.length) {
@@ -87,9 +86,8 @@ const tasks = async () => {
 
   console.log(`更新楼幢完成`);
 
-  await notice(values);
-  console.log(`已成功发送邮件`);
-  console.timeEnd('列表爬取时长');
+  const notificationList = await notice(values);
+  console.log(`已成功发送邮件 ${notificationList.length} 封`);
 };
 
 const rule = new schedule.RecurrenceRule();
@@ -104,6 +102,7 @@ const implement = () => {
   }
   starting = true;
   process.emit('taskStart' as any);
+  console.time('列表爬取时长');
   tasks()
     .catch((e) => {
       console.error(e);
@@ -111,6 +110,7 @@ const implement = () => {
     .finally(() => {
       starting = false;
       process.emit('taskEnd' as any);
+      console.timeEnd('列表爬取时长');
     });
 };
 

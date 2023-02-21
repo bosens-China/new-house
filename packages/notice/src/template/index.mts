@@ -15,7 +15,8 @@ const priceDescription = (price: housingSupplement) => {
   return `${priceText(price)} 房间 ${price.lbPartNO}`;
 };
 
-export default async (data: Array<RootData>) => {
+// 获取所有模板通知的数据
+export const getData = async (data: Array<RootData>) => {
   const newData: Array<CurrentType> = [];
   for (const item of data) {
     const details = await Details.findOne({ parentId: item.id }).lean();
@@ -36,8 +37,51 @@ export default async (data: Array<RootData>) => {
       ...details,
     } as any);
   }
-  newData.map((f) => f.building.map((f) => f.averagePrice));
-  const html = ejs.render(template, { data: newData, priceText, priceDescription });
+
+  return newData;
+};
+
+export const getTemplate = (data: Array<CurrentType>) => {
+  const html = ejs.render(template, { data, priceText, priceDescription });
 
   return html;
+};
+
+// 根据价格来进行过滤
+
+export const priceFiltering = (
+  data: Array<CurrentType>,
+  { floorPrice, ceilingPrice }: { floorPrice?: number; ceilingPrice?: number } = {},
+) => {
+  const newData: Array<CurrentType> = [];
+  data.forEach((item) => {
+    const vlaues = item.building.filter((f) => {
+      // // 最低价
+      // floorPrice?: number;
+      // lowestPrice: housingSupplement;
+      // // 最高价
+      // ceilingPrice?: number;
+      // highestPrice: housingSupplement;
+      if (!floorPrice && !ceilingPrice) {
+        return true;
+      }
+      // 如果同时存在，必须都满足
+      if (floorPrice && ceilingPrice) {
+        return f.highestPrice.price >= floorPrice && f.lowestPrice.price <= ceilingPrice;
+      }
+      if (floorPrice) {
+        return f.highestPrice.price >= floorPrice;
+      }
+      if (ceilingPrice) {
+        return f.lowestPrice.price <= ceilingPrice;
+      }
+    });
+    if (vlaues.length) {
+      newData.push({
+        ...item,
+        building: vlaues,
+      });
+    }
+  });
+  return newData;
 };

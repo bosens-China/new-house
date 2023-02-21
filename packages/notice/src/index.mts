@@ -1,14 +1,15 @@
-import template from './template/index.mjs';
+import { getData, getTemplate, priceFiltering } from './template/index.mjs';
 import nodemailer from 'nodemailer';
 import { RootData } from '@new-house/database/model/list';
 import { load } from 'cheerio';
 import { Mail } from '@new-house/database/model/mail';
 
 export default async (data: Array<RootData>) => {
+  const result: Array<string> = [];
   if (!data.length) {
-    return;
+    return result;
   }
-  const html = await template(data);
+  const newData = await getData(data);
   const { EMAIL_ACCOUNT, EMAIL_AUTHORIZATION_CODE } = process.env;
 
   const transporter = nodemailer.createTransport({
@@ -19,18 +20,28 @@ export default async (data: Array<RootData>) => {
       pass: EMAIL_AUTHORIZATION_CODE,
     },
   });
-  const $ = load(html, null, false);
-  const text = $.text();
-  const mailbox = await Mail.find({}).lean();
-  const to = mailbox
-    .filter((f) => f.disable !== true)
-    .map((f) => f.mailbox)
-    .join(',');
-  await transporter.sendMail({
-    from: `"楼盘小助手 👻" <${EMAIL_ACCOUNT}>`,
-    to,
-    subject: '楼盘列表上新',
-    text,
-    html,
-  });
+  // 这里因为邮箱的设置条件不同，所有循环发送
+  const mailLists = await Mail.find({}).lean();
+  for (const { disable, floorPrice, ceilingPrice, mailbox } of mailLists) {
+    if (disable) {
+      continue;
+    }
+    // 价格对比
+    const filterValue = priceFiltering(newData, { floorPrice, ceilingPrice });
+    if (!filterValue.length) {
+      continue;
+    }
+    const html = getTemplate(filterValue);
+    const $ = load(html, null, false);
+    const text = $.text();
+    await transporter.sendMail({
+      from: `"楼盘小助手 👻" <${EMAIL_ACCOUNT}>`,
+      to: mailbox,
+      subject: '楼盘列表上新',
+      text,
+      html,
+    });
+    result.push(mailbox);
+  }
+  return result;
 };
