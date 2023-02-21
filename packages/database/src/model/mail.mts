@@ -1,4 +1,4 @@
-import { Schema, model, Require_id } from 'mongoose';
+import { Schema, model, Require_id, DefaultType } from 'mongoose';
 
 export interface Data {
   mailbox: string;
@@ -13,8 +13,8 @@ export interface Data {
 export const mailSchema = new Schema<Data>({
   mailbox: { type: String, required: true },
   disable: { type: Boolean, required: true },
-  ceilingPrice: { type: Number, required: true },
-  floorPrice: { type: Number, required: true },
+  ceilingPrice: { type: Number, required: false },
+  floorPrice: { type: Number, required: false },
 });
 
 export const Mail = model<Data>('Mail', mailSchema);
