@@ -2,7 +2,7 @@
 <ul>
   <% data.forEach(function(item){ %>
   <li>
-    <p>项目名称：<%= item.name %><a href="<%= item.link %>"></a></p>
+    <p>项目名称：<a href="<%= item.link %>"><%= item.name %></a></p>
     <p>企业名称：<%= item.enterprise %></p>
     <p>区域：<%= item.region %></p>
     <p>登记开始时间：<%= item.startTimeStr %></p>
@@ -53,5 +53,13 @@
 
   details li {
     border-bottom: none;
+  }
+  /* 
+   * 添加夜间模式
+  */
+  @media (prefers-color-scheme: dark) {
+    ul li {
+      border-bottom-color: #f2eeee;
+    }
   }
 </style>
