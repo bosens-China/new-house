@@ -1,10 +1,10 @@
-import path from 'path';
-import webpack from 'webpack';
-import CopyPlugin from 'copy-webpack-plugin';
-// in case you run into any typescript error when configuring `devServer`
-import 'webpack-dev-server';
+const path = require('path');
 
-const config: webpack.Configuration = {
+const CopyPlugin = require('copy-webpack-plugin');
+
+const NodemonPlugin = require('nodemon-webpack-plugin');
+
+const config = {
   target: 'node',
   mode: 'production',
   devtool: 'source-map',
@@ -29,13 +29,15 @@ const config: webpack.Configuration = {
           not: [/@new-house/],
         },
         use: {
-          loader: 'babel-loader',
-          options: {},
+          loader: require.resolve('babel-loader'),
+          options: {
+            cwd: __dirname,
+          },
         },
       },
       {
-        test: /\.ejs$/i,
-        use: 'raw-loader',
+        test: /\.(ejs|njk)$/i,
+        use: require.resolve('raw-loader'),
         exclude: {
           and: [/node_modules/],
           not: [/@new-house/],
@@ -56,6 +58,13 @@ const config: webpack.Configuration = {
     new CopyPlugin({
       patterns: [path.resolve(__dirname, '.env')],
     }),
+    ...(process.env.NODE_ENV === 'development'
+      ? [
+          new NodemonPlugin({
+            nodeArgs: ['--enable-source-map', '--debug=9222'],
+          }),
+        ]
+      : []),
   ],
   optimization: {
     minimize: true,
@@ -81,4 +90,4 @@ const config: webpack.Configuration = {
   },
 };
 
-export default config;
+module.exports = config;
