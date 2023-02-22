@@ -1,7 +1,9 @@
 import axios, { AxiosProxyConfig } from 'axios';
-import { alone, getRandomInt } from '@new-house/speed-limit';
+import { alone, getRandomInt } from '@new-house/public/speedLimit/index';
 import randomUseragent from 'random-useragent';
-import { getTotal } from '../list.mjs';
+import { getTotal } from '../function/list.mjs';
+import { state } from '@new-house/public/state';
+import { watch } from '@vue-reactivity/watch';
 // import ora from 'ora';
 
 interface Type {
@@ -23,6 +25,7 @@ type ProxyConfig = Pick<AxiosProxyConfig, 'host' | 'port'> & { runTime: number }
  */
 class Agent {
   public list: Map<string, Type & ProxyConfig> = new Map();
+  private MAX_SIZE = 100;
   // private spinner = ora('加载代理池中...');
 
   // 获取全部代理池数据
@@ -81,6 +84,9 @@ class Agent {
   }
 
   async init() {
+    if (this.list.size >= this.MAX_SIZE) {
+      return;
+    }
     // console.log(`正在获取可用代理地址...`);
     const arr = [...(await this.getAvailableAgents())];
 
@@ -150,14 +156,22 @@ class Agent {
   }
 
   constructor() {
-    // 每次任务开始就清理一下
-    process.on('taskStart', () => {
-      this.list.clear();
-      // this.spinner.start();
-    });
-    process.on('taskEnd', () => {
-      // this.spinner.stop();
-    });
+    let time: NodeJS.Timeout | undefined;
+    /*
+     * 如果空闲的时候就多进行爬取，然后爬取的时候取消
+     */
+    watch(
+      () => state,
+      (v) => {
+        if (v.value === 'free') {
+          time = setTimeout(() => {
+            this.init();
+          }, 60000);
+          return;
+        }
+        clearTimeout(time);
+      },
+    );
   }
 
   invalidCleanup({ host, port }: Pick<AxiosProxyConfig, 'host' | 'port'>) {

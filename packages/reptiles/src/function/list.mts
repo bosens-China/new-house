@@ -1,9 +1,9 @@
-import { getList } from './api/index.mjs';
+import { getList } from '../api/index.mjs';
 import { load } from 'cheerio';
 import dayjs from 'dayjs';
 import { Data, List } from '@new-house/database/model/list';
 import 'dayjs/locale/zh-cn';
-import { BASE_URL } from './utils/request.mjs';
+import { BASE_URL } from '../utils/request.mjs';
 
 dayjs.locale('zh-cn');
 

@@ -1,3 +1,8 @@
-export { default as list } from './list.mjs';
-export { default as details } from './details.mjs';
-export { default as building } from './building.mjs';
+import { init } from '@new-house/database/init';
+import { task } from './task.mjs';
+import { timing } from './timing.mjs';
+
+// 加载数据库
+await init();
+// 加载定时任务
+timing(task);

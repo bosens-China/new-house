@@ -1,6 +1,6 @@
 import axios from 'axios';
 import randomUseragent from 'random-useragent';
-import { alone } from '@new-house/speed-limit';
+import { alone } from '@new-house/public/speedLimit/index';
 import proxy from './proxy.mjs';
 
 export const BASE_URL = 'http://60.173.254.126:8888';

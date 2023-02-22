@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { load } from 'cheerio';
 import dayjs from 'dayjs';
-import { getBuilding, getHouses } from './api/index.mjs';
-import { group } from '@new-house/speed-limit';
+import { getBuilding, getHouses } from '../api/index.mjs';
+import { group } from '@new-house/public/speedLimit/index';
 import { housingSupplement } from '@new-house/database/model/building';
 import { Building, Data } from '@new-house/database/model/building';
 

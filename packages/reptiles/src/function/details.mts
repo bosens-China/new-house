@@ -1,8 +1,8 @@
 import { Details, Data, Building } from '@new-house/database/model/details';
 import { List } from '@new-house/database/model/list';
-import { getDetails } from './api/index.mjs';
+import { getDetails } from '../api/index.mjs';
 import { load } from 'cheerio';
-import { BASE_URL } from './utils/request.mjs';
+import { BASE_URL } from '../utils/request.mjs';
 
 // 列表返回的是刚需供应数：22形式，获取：之后的内容
 const getTextDetails = (str: string) => {
