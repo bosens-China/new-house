@@ -18,6 +18,8 @@ program
       debuggerBoolean: false,
       dist,
       entry,
+      watch: true,
+      mode: 'development',
     });
   });
 
@@ -36,7 +38,7 @@ program
 
 program.parse(process.argv);
 
-function build({ debuggerBoolean = true, dist, entry } = {}) {
+function build({ debuggerBoolean = true, dist, entry, watch = false, mode = 'production' } = {}) {
   // 读取src/index.mts 内容然后临时写入一个文件，之后删除
   const content = fs.readFileSync(path.resolve(__dirname, '../src/index.mts'), 'utf-8');
   const filePath = path.resolve(__dirname, `../src/index${new Date().valueOf()}.mts`);
@@ -48,10 +50,18 @@ function build({ debuggerBoolean = true, dist, entry } = {}) {
     entry: {
       index: filePath,
     },
+    watch,
+    mode,
   };
 
   newConfig.output.path = dist;
   newConfig.optimization.minimize = debuggerBoolean;
+  newConfig.plugins.push(
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': mode,
+    }),
+  );
+
   webpack(newConfig, (err, stats) => {
     if (err) {
       console.error(err.stack || err);
