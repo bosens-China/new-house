@@ -6,6 +6,7 @@
     "mongoose": "^6.9.0"
   },
   "exports": {
+    "./*": "./src/*.mts",
     "./model/*": "./src/model/*.mts"
   }
 }

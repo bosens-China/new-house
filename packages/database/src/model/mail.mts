@@ -1,4 +1,4 @@
-import { Schema, model, Require_id, DefaultType } from 'mongoose';
+import { Schema, model, Require_id } from 'mongoose';
 
 export interface Data {
   mailbox: string;
@@ -8,6 +8,8 @@ export interface Data {
   ceilingPrice?: number;
   // 最低价格
   floorPrice?: number;
+  // 创建日期
+  createdDate: number;
 }
 
 export const mailSchema = new Schema<Data>({
@@ -15,6 +17,7 @@ export const mailSchema = new Schema<Data>({
   disable: { type: Boolean, required: true },
   ceilingPrice: { type: Number, required: false },
   floorPrice: { type: Number, required: false },
+  createdDate: { type: Number, required: true },
 });
 
 export const Mail = model<Data>('Mail', mailSchema);
