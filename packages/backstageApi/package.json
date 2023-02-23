@@ -1,0 +1,25 @@
+{
+  "name": "@new-house/backstage-api",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "@fastify/type-provider-typebox": "^2.4.0",
+    "@new-house/database": "workspace:^1.0.0",
+    "@new-house/entrance": "workspace:^1.0.0",
+    "@sinclair/typebox": "^0.25.23",
+    "fastify": "^4.13.0",
+    "glob": "^8.1.0",
+    "lodash-es": "^4.17.21"
+  },
+  "exports": {
+    ".": "./src/type.mts"
+  },
+  "scripts": {
+    "dev": "house serve src/index.mts",
+    "build": "house build src/index.mts"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/lodash-es": "^4.17.6"
+  }
+}
