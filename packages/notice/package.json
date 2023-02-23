@@ -5,13 +5,13 @@
   "main": "./src/index.mts",
   "module": "./src/index.mts",
   "dependencies": {
-    "ejs": "^3.1.8",
+    "cheerio": "1.0.0-rc.12",
     "nodemailer": "^6.9.1",
-    "cheerio": "1.0.0-rc.12"
+    "nunjucks": "^3.2.3"
   },
   "devDependencies": {
     "@new-house/database": "workspace:^1.0.0",
-    "@types/ejs": "^3.1.1",
-    "@types/nodemailer": "^6.4.7"
+    "@types/nodemailer": "^6.4.7",
+    "@types/nunjucks": "^3.2.2"
   }
 }

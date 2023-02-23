@@ -1,15 +1,21 @@
+/// <reference path="../../entrance/global.d.ts" />
+
 import { getData, getTemplate, priceFiltering } from './template/index.mjs';
 import nodemailer from 'nodemailer';
 import { RootData } from '@new-house/database/model/list';
 import { load } from 'cheerio';
 import { Mail } from '@new-house/database/model/mail';
+import { getList } from './utils.mjs';
 
 export default async (data: Array<RootData>) => {
   const result: Array<string> = [];
-  if (!data.length) {
-    return result;
-  }
+  /*
+   * 获取模板需要的数据
+   */
   const newData = await getData(data);
+  const all = await getList();
+  const allData = await getData(all);
+
   const { EMAIL_ACCOUNT, EMAIL_AUTHORIZATION_CODE } = process.env;
 
   const transporter = nodemailer.createTransport({
@@ -27,11 +33,13 @@ export default async (data: Array<RootData>) => {
       continue;
     }
     // 价格对比
-    const filterValue = priceFiltering(newData, { floorPrice, ceilingPrice });
-    if (!filterValue.length) {
+    const filterNewData = priceFiltering(newData, { floorPrice, ceilingPrice });
+    const filterAllData = priceFiltering(allData, { floorPrice, ceilingPrice });
+    if (!filterNewData.length && !filterAllData.length) {
       continue;
     }
-    const html = getTemplate(filterValue);
+    debugger;
+    const html = getTemplate(filterNewData, filterAllData);
     const $ = load(html, null, false);
     const text = $.text();
     await transporter.sendMail({

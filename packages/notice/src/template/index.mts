@@ -1,5 +1,5 @@
-import template from './index.ejs';
-import ejs from 'ejs';
+import template from './index.njk';
+import nunjucks from 'nunjucks';
 import { RootData } from '@new-house/database/model/list';
 import { Details, RootData as DetailsRootData, Building as DetailsBuilding } from '@new-house/database/model/details';
 import { Building, housingSupplement, RootData as BuildingRootData } from '@new-house/database/model/building';
@@ -41,8 +41,8 @@ export const getData = async (data: Array<RootData>) => {
   return newData;
 };
 
-export const getTemplate = (data: Array<CurrentType>) => {
-  const html = ejs.render(template, { data, priceText, priceDescription });
+export const getTemplate = (newData: Array<CurrentType>, allData: Array<CurrentType>) => {
+  const html = nunjucks.renderString(template, { newData, allData, priceText, priceDescription });
 
   return html;
 };
