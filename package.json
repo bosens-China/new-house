@@ -12,5 +12,13 @@
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.8.3",
     "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "@vue-reactivity/watch": "^0.2.0",
+    "@vue/reactivity": "^3.2.47",
+    "@vue/shared": "^3.2.47"
+  },
+  "scripts": {
+    "preinstall": "npx only-allow pnpm"
   }
 }
