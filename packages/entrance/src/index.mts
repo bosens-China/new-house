@@ -1,4 +1,10 @@
-import { config } from 'dotenv';
+import { parse } from 'dotenv';
+import env from '../.env';
 
-// 加载env变量
-await config();
+const config = parse(env);
+
+for (const [name, value] of Object.entries(config)) {
+  if (process.env[name] === undefined) {
+    process.env[name] = value;
+  }
+}

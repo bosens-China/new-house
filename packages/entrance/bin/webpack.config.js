@@ -1,8 +1,6 @@
 const path = require('path');
 
-const CopyPlugin = require('copy-webpack-plugin');
-
-const NodemonPlugin = require('nodemon-webpack-plugin');
+const RunNodeWebpackPlugin = require('run-node-webpack-plugin');
 
 const config = {
   target: 'node',
@@ -12,7 +10,7 @@ const config = {
     index: './src/index.mts',
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(process.cwd(), './dist'),
     filename: '[name].js',
     clean: true,
   },
@@ -31,12 +29,12 @@ const config = {
         use: {
           loader: require.resolve('babel-loader'),
           options: {
-            cwd: __dirname,
+            cwd: path.resolve(__dirname, '../'),
           },
         },
       },
       {
-        test: /\.(ejs|njk)$/i,
+        test: /\.(ejs|njk|env)$/i,
         use: require.resolve('raw-loader'),
         exclude: {
           and: [/node_modules/],
@@ -55,16 +53,10 @@ const config = {
     // ...
   },
   plugins: [
-    new CopyPlugin({
-      patterns: [path.resolve(__dirname, '.env')],
+    new RunNodeWebpackPlugin({
+      nodeArgs: ['--enable-source-maps'],
+      runOnlyInWatchMode: true,
     }),
-    ...(process.env.NODE_ENV === 'development'
-      ? [
-          new NodemonPlugin({
-            nodeArgs: ['--enable-source-map', '--debug=9222'],
-          }),
-        ]
-      : []),
   ],
   optimization: {
     minimize: true,
@@ -90,4 +82,4 @@ const config = {
   },
 };
 
-module.exports = config;
+module.exports = { config };

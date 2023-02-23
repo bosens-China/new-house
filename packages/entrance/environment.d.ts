@@ -11,6 +11,9 @@ declare global {
       EMAIL_AUTHORIZATION_CODE: string;
       // 其他
       PROXY_ADDRESS: string;
+
+      // server部分
+      PORT: string;
     }
   }
 }
