@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import type { Normal, Error } from '@new-house/backstage-api';
 
 const instance = axios.create({
   baseURL: '/api',
@@ -17,10 +18,17 @@ instance.interceptors.request.use(
   },
 );
 
+const isNormal = (data: Normal | Error): data is Normal => {
+  return data.statusCode === 200;
+};
+
 // 添加响应拦截器
 instance.interceptors.response.use(
-  function (response) {
-    // 对响应数据做点什么
+  function (response: AxiosResponse<Normal | Error>) {
+    const { data } = response;
+    if (!isNormal(data)) {
+      throw new Error(data.message);
+    }
     return response;
   },
   function (error) {

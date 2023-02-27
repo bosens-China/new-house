@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, Space, Col, Row, Table, Tag, Popconfirm, message } from 'antd';
-import { RootData } from '@new-house/database/model/mail';
+import type { RootData } from '@new-house/database/model/mail';
 import { PlusOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { subscribeList, subscribeRemove } from '@/api/subscribe.js';
@@ -15,6 +15,18 @@ const Subscribe = () => {
     {
       title: '邮箱地址',
       dataIndex: 'mailbox',
+    },
+    {
+      title: '价格区间',
+      key: 'price',
+      render(_, { floorPrice, ceilingPrice }) {
+        if (!floorPrice && !ceilingPrice) {
+          return '';
+        }
+        return [floorPrice ? `${floorPrice / 10000}万` : '/', ceilingPrice ? `${ceilingPrice / 10000}万` : '/'].join(
+          ' - ',
+        );
+      },
     },
     {
       title: '当前状态',
@@ -52,6 +64,7 @@ const Subscribe = () => {
             description="确认删除吗？"
             onConfirm={() => {
               run(record._id);
+              refreshList(false);
             }}
           >
             <a href="#" onClick={(e) => e.preventDefault()}>
@@ -63,7 +76,24 @@ const Subscribe = () => {
     },
   ];
 
-  const { tableProps } = useAntdTable(subscribeList);
+  const { tableProps, search } = useAntdTable(subscribeList, {
+    form,
+  });
+  const { submit, reset } = search;
+
+  const { onChange, pagination } = tableProps;
+  // 刷新列表
+  const refreshList = (add = true) => {
+    onChange({
+      ...pagination,
+      ...(add
+        ? {
+            current: 1,
+          }
+        : {}),
+    });
+  };
+
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<RootData>();
   const { run } = useRequest(subscribeRemove, {
@@ -76,9 +106,14 @@ const Subscribe = () => {
     },
   });
 
+  const onNew = () => {
+    setOpen(true);
+    setData(undefined);
+  };
+
   return (
     <>
-      <Space direction="vertical" style={{ display: 'flex' }}>
+      <Space direction="vertical" style={{ display: 'flex' }} size="large">
         <Form layout="inline" form={form}>
           <Row style={{ width: '100%' }}>
             <Col span={7}>
@@ -89,17 +124,17 @@ const Subscribe = () => {
             <Col flex="none">
               <Form.Item>
                 <Space>
-                  <Button>重置</Button>
-                  <Button type="primary" htmlType="submit">
+                  <Button type="primary" htmlType="submit" onClick={submit}>
                     查询
                   </Button>
+                  <Button onClick={reset}>重置</Button>
                 </Space>
               </Form.Item>
             </Col>
             <Col flex="auto"></Col>
             <Col flex="none">
-              <Form.Item>
-                <Button type="primary" icon={<PlusOutlined />}>
+              <Form.Item style={{ marginRight: 0 }}>
+                <Button type="primary" icon={<PlusOutlined />} onClick={onNew}>
                   新增
                 </Button>
               </Form.Item>
@@ -108,7 +143,7 @@ const Subscribe = () => {
         </Form>
         <Table columns={columns} {...tableProps} />
       </Space>
-      <PrivateModal open={open} data={data} setOpen={setOpen}></PrivateModal>
+      <PrivateModal open={open} data={data} setOpen={setOpen} refreshList={refreshList}></PrivateModal>
     </>
   );
 };
