@@ -1,10 +1,12 @@
 import { FastifyInstance } from 'fastify';
 import { Static, Type } from '@sinclair/typebox';
-import { Mail } from '@new-house/database/model/mail';
+import { Mail, Data } from '@new-house/database/model/mail';
+import { FilterQuery } from 'mongoose';
 
 const Subscribe = Type.Object({
   current: Type.Optional(Type.Number()),
   pageSize: Type.Optional(Type.Number()),
+  mailbox: Type.Optional(Type.String()),
 });
 
 type SubscribeTypePut = Static<typeof Subscribe>;
@@ -31,10 +33,15 @@ export default (fastify: FastifyInstance) => {
       },
     },
     async (request): Promise<returnValueType> => {
-      const { current = 1, pageSize = 20 } = request.query;
+      const { current = 1, pageSize = 20, mailbox } = request.query;
       const skip = (current - 1) * pageSize;
-      const length = (await Mail.find({}).lean()).length;
-      const result = await Mail.find({}).sort({ createdDate: 1 }).skip(skip).limit(pageSize).lean();
+      const condition: FilterQuery<Data> = {};
+      if (mailbox) {
+        condition.mailbox = { $regex: new RegExp(mailbox) };
+      }
+
+      const length = (await Mail.find(condition).lean()).length;
+      const result = await Mail.find(condition).sort({ createdDate: 1 }).skip(skip).limit(pageSize).lean();
       return { total: length, list: result };
     },
   );

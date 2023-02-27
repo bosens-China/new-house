@@ -20,6 +20,8 @@ app.addHook('onSend', async function (request, reply, payload: any) {
   if (!_.isString(payload)) {
     return;
   }
+  // 改变状态
+  reply.code(200);
   try {
     const value = JSON.parse(payload);
     if (_.isObjectLike(value) && value.statusCode && value.error) {
@@ -32,7 +34,12 @@ app.addHook('onSend', async function (request, reply, payload: any) {
     };
     return JSON.stringify(newPayload);
   } catch {
-    //
+    const newPayload: Normal = {
+      data: payload,
+      statusCode: 200,
+      message: 'ok',
+    };
+    return JSON.stringify(newPayload);
   }
 });
 
@@ -40,6 +47,6 @@ try {
   await init();
   await app.listen({ port: +process.env.PORT, host: '0.0.0.0' });
 } catch (err) {
-  app.log.error(err);
+  console.log(err);
   process.exit(1);
 }

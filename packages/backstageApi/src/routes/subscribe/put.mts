@@ -29,11 +29,11 @@ export default (fastify: FastifyInstance) => {
     },
     async (request) => {
       const { id } = request.params;
-      const { ...rest } = request.body;
+      const { disable, ceilingPrice, floorPrice } = request.body;
       if (!(await Mail.findOne({ _id: id }))) {
         throw new Error(`待更新值不存在`);
       }
-      await Mail.updateOne({ _id: id }, { $set: { ...rest } });
+      await Mail.updateOne({ _id: id }, { $set: { disable, ceilingPrice, floorPrice } });
       return '更新成功';
     },
   );
