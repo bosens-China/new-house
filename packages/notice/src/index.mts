@@ -38,7 +38,7 @@ export default async (data: Array<RootData>) => {
     if (!filterNewData.length && !filterAllData.length) {
       continue;
     }
-    debugger;
+
     const html = getTemplate(filterNewData, filterAllData);
     const $ = load(html, null, false);
     const text = $.text();

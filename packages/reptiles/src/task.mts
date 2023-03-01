@@ -40,7 +40,7 @@ export const task = async () => {
   const total = allBuilding.reduce((x, item) => {
     return x + item.tasks.length;
   }, 0);
-  const priceBar = new ProgressBar('爬取楼幢价格 [:bar] :current/:total :percent :rate :elapseds 预计完成时间：:etas', {
+  const priceBar = new ProgressBar('爬取楼幢价格 [:bar] :current/:total :percent 总耗时 :elapseds', {
     complete: '=',
     incomplete: ' ',
     total,

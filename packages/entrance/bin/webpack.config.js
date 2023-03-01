@@ -11,7 +11,7 @@ const config = {
   },
   output: {
     path: path.resolve(process.cwd(), './dist'),
-    filename: '[name].js',
+    filename: '[name].cjs',
     clean: true,
   },
   experiments: {
@@ -38,13 +38,17 @@ const config = {
         use: require.resolve('raw-loader'),
         exclude: {
           and: [/node_modules/],
-          not: [/@new-house/],
+          // not: [/@new-house/],
         },
+      },
+      {
+        test: /\.node$/,
+        loader: require.resolve('node-loader'),
       },
     ],
   },
   resolve: {
-    extensions: ['.ts', '.mts', '.js', '.json'],
+    extensions: ['.ts', '.mts', '.js', '.json', '.cjs'],
     extensionAlias: {
       // '.js': ['.ts', '.js'],
       '.cjs': ['.cts', '.cjs'],
@@ -56,6 +60,7 @@ const config = {
     new RunNodeWebpackPlugin({
       nodeArgs: ['--enable-source-maps'],
       runOnlyInWatchMode: true,
+      scriptToRun: 'index.cjs',
     }),
   ],
   optimization: {

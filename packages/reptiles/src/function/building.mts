@@ -80,6 +80,7 @@ export default async (link: string) => {
           };
         })
         .sort((x, y) => x.price - y.price);
+
       // 计算最高价，最低价和均价
       const lowestPrice: housingSupplement = sort.at(0)!;
       // 最高价
