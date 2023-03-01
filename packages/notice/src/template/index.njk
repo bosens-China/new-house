@@ -49,9 +49,7 @@
 {% if newData.length %}
 <h2>本次新增楼盘 {{ newData.length }} 个</h2>
 {{ getTemplate(newData) }}
-{% endif %}
-
-{% if allData.length %}
+{% elif allData.length %}
 <h2>所有楼盘 {{ allData.length }} 个</h2>
 {{ getTemplate(allData) }}
 {% endif %}
