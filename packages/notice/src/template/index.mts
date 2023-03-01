@@ -43,9 +43,9 @@ export const getData = async (data: Array<RootData>) => {
 
 export const getTemplate = (newData: Array<CurrentType>, allData: Array<CurrentType>) => {
   // 过滤掉新增的部分，求一个差集即可
-  const newAll = allData.filter(({ id }) => !!newData.find((f) => f.id !== id));
+  const all = allData.filter(({ id }) => !!newData.find((f) => f.id !== id));
 
-  const html = nunjucks.renderString(template, { newData, newAll, priceText, priceDescription });
+  const html = nunjucks.renderString(template, { allData: all, newData, priceText, priceDescription });
 
   return html;
 };
