@@ -1,4 +1,4 @@
-/// <reference path="../../entrance/environment.d.ts" />
+/// <reference path="../../../environment.d.ts" />
 
 import fastify from 'fastify';
 import { init } from '@new-house/database/init';

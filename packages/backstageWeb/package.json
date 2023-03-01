@@ -4,9 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "check": "tsc",
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "arrange": "node build.cjs"
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
@@ -25,6 +27,7 @@
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react": "^3.1.0",
     "less": "^4.1.3",
+    "shelljs": "^0.8.5",
     "typescript": "^4.9.3",
     "vite": "^4.1.0"
   }

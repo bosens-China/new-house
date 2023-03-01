@@ -13,5 +13,8 @@
     "@new-house/database": "workspace:^1.0.0",
     "@types/nodemailer": "^6.4.7",
     "@types/nunjucks": "^3.2.2"
+  },
+  "scripts": {
+    "check": "tsc"
   }
 }

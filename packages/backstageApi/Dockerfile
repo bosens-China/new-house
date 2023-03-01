@@ -6,8 +6,10 @@ ENV NODE_ENV=production
 RUN apk add --no-cache tzdata
 RUN apk add openssh-client
 
-COPY ./dist /app/backstageApi
+COPY ./dist /app/dist
 
-WORKDIR /app/backstageApi
+WORKDIR /app/dist
+
+EXPOSE 4000
 
 CMD [ "node", "--enable-source-maps", "index.cjs" ]

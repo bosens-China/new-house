@@ -8,5 +8,8 @@
   "exports": {
     "./*": "./src/*.mts",
     "./model/*": "./src/model/*.mts"
+  },
+  "scripts": {
+    "check": "tsc"
   }
 }

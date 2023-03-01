@@ -24,7 +24,7 @@
     "webpack-dev-server": "^4.11.1"
   },
   "scripts": {
-    "mongo-up": "docker-compose up"
+    "check": "tsc"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.1"

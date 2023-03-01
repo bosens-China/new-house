@@ -1,5 +1,8 @@
+/// <reference path="../../../environment.d.ts" />
+/// <reference path="../../../global.d.ts" />
+
 import { parse } from 'dotenv';
-import env from '../.env';
+import env from '../../../.env';
 
 const config = parse(env);
 

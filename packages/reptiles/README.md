@@ -12,3 +12,4 @@
 - boses/reptiles:1.0.3
 - boses/reptiles:1.0.4
 - boses/reptiles:1.0.5
+- boses/reptiles:1.0.6

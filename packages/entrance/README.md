@@ -10,7 +10,3 @@
 house serve src/index.mts
 house build src/index.mts
 ```
-
-## 环境变量说明
-
-参考 [environment.d](./environment.d.ts) 文件

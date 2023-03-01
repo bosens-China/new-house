@@ -21,6 +21,7 @@
     "core-js": "^3.8.3"
   },
   "scripts": {
+    "check": "pnpm run -r check",
     "preinstall": "npx only-allow pnpm"
   }
 }

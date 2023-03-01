@@ -15,11 +15,14 @@
     ".": "./src/type.mts"
   },
   "scripts": {
+    "check": "tsc",
     "dev": "house serve src/index.mts",
-    "build": "house build src/index.mts"
+    "build": "house build src/index.mts",
+    "arrange": "node build.cjs"
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
-    "@types/lodash-es": "^4.17.6"
+    "@types/lodash-es": "^4.17.6",
+    "shelljs": "^0.8.5"
   }
 }

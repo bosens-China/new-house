@@ -1,3 +1,5 @@
+/// <reference path="../../../../../global.d.ts" />
+
 import { priceFiltering, getTemplate } from '../../../../notice/src/template/index.mjs';
 import { filterAllData, filterNewData } from './building.js';
 

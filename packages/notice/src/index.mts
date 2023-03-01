@@ -1,4 +1,4 @@
-/// <reference path="../../entrance/global.d.ts" />
+/// <reference path="../../../global.d.ts" />
 
 import { getData, getTemplate, priceFiltering } from './template/index.mjs';
 import nodemailer from 'nodemailer';
