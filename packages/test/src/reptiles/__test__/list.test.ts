@@ -1,4 +1,4 @@
-import { transformation, getTotal } from '../../../../reptiles/src/list.mjs';
+import { transformation, getTotal } from '../../../../reptiles/src/function//list.mjs';
 import fs from 'fs';
 import path from 'path';
 

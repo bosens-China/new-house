@@ -1,4 +1,4 @@
-import { transformation } from '../../../../reptiles/src/details.mjs';
+import { transformation } from '../../../../reptiles/src/function//details.mjs';
 import fs from 'fs';
 import path from 'path';
 

@@ -4,8 +4,9 @@ module.exports = {
   transform: {
     '^.+\\.m?(ts|tsx)?$': 'babel-jest',
     '^.+\\.m?(js|jsx)$': 'babel-jest',
+    '\\.(njk|env|ejs)$': '<rootDir>/fileTransformer.cjs',
   },
-  moduleNameMapper: {
-    '\\.(ejs)$': '<rootDir>/identity-obj-proxy.cjs',
-  },
+  // moduleNameMapper: {
+  //   '\\.(njk|ejs|env)$': '<rootDir>/raw.cjs',
+  // },
 };
