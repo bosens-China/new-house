@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+export default `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -2136,3 +2136,4 @@
 
   var secondRoot = '';
 </script>
+`;

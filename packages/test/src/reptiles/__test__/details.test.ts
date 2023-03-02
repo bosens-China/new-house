@@ -1,8 +1,7 @@
 import { transformation } from '../../../../reptiles/src/function//details.mjs';
 import fs from 'fs';
 import path from 'path';
-
-const html = fs.readFileSync(path.join(__dirname, './details.html'), 'utf-8');
+import html from './assets/details.js';
 
 test(`transformation`, () => {
   const values = transformation(html);

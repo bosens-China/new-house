@@ -1,8 +1,7 @@
 import { transformation, getTotal } from '../../../../reptiles/src/function//list.mjs';
 import fs from 'fs';
 import path from 'path';
-
-const html = fs.readFileSync(path.join(__dirname, './list.html'), 'utf-8');
+import html from './assets/list.js';
 
 test(`transformation`, () => {
   const values = transformation(html);
