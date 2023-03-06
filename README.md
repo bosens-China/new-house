@@ -26,6 +26,10 @@ pnpm i
 
 参考 [environment.d](./environment.d.ts) 文件
 
+## 后续计划
+
+- 完善代理池调度
+
 ## 协议
 
 [MIT License](./License)
