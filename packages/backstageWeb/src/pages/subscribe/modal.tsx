@@ -23,7 +23,7 @@ const PrivateModal: FC<Props> = (props) => {
     manual: true,
     onSuccess() {
       message.success(`新增成功！`);
-      refreshList();
+      refreshList(false);
       handleCancel();
     },
     onError(err) {
@@ -34,7 +34,7 @@ const PrivateModal: FC<Props> = (props) => {
     manual: true,
     onSuccess() {
       message.success(`编辑成功！`);
-      refreshList(false);
+      refreshList(true);
       handleCancel();
     },
     onError(err) {
@@ -55,6 +55,7 @@ const PrivateModal: FC<Props> = (props) => {
     if (values.floorPrice) {
       values.floorPrice = values.floorPrice * 10000;
     }
+    values.disable = !values.disable;
     if (!data) {
       return runAdd(values);
     }
@@ -73,6 +74,7 @@ const PrivateModal: FC<Props> = (props) => {
     if (values && values.floorPrice) {
       values.floorPrice = values.floorPrice / 10000;
     }
+    values.disable = !values.disable;
     return form.setFieldsValue(values as any);
   }, [open, form, data]);
 
@@ -82,7 +84,7 @@ const PrivateModal: FC<Props> = (props) => {
 
   return (
     <Modal title={title} open={open} onOk={handleOk} onCancel={handleCancel}>
-      <Form labelCol={{ span: 4 }} wrapperCol={{ span: 19 }} form={form} initialValues={{ disable: false }}>
+      <Form labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} form={form}>
         {!data && (
           <Form.Item
             label="邮箱"
@@ -108,8 +110,8 @@ const PrivateModal: FC<Props> = (props) => {
         <Form.Item label="最高价(万)" name="ceilingPrice">
           <InputNumber min={0} />
         </Form.Item>
-        <Form.Item label="当前状态" name="disable" valuePropName="checked">
-          <Switch checkedChildren="禁用" unCheckedChildren="正常" />
+        <Form.Item label="邮件订阅状态" name="disable" valuePropName="checked">
+          <Switch />
         </Form.Item>
       </Form>
     </Modal>

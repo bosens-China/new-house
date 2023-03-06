@@ -36,3 +36,19 @@ export const subscribePut = async (id: RootData['_id'], body: Omit<Data, 'create
   } = await instance.put<Normal<string>>(`/subscribe/${id}`, body);
   return data;
 };
+
+// 切换状态
+export const subscribeSwitchState = async (id: RootData['_id'], disable: boolean) => {
+  const {
+    data: { data },
+  } = await instance.put<Normal<string>>(`/subscribe/${id}`, { disable });
+  return data;
+};
+
+// 重发邮件
+export const subscribeRepeat = async (mailbox: string) => {
+  const {
+    data: { data },
+  } = await instance.get<Normal<string>>('/subscribe/repeat', { params: { mailbox } });
+  return data;
+};

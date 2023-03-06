@@ -1,16 +1,53 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, Space, Col, Row, Table, Tag, Popconfirm, message } from 'antd';
+import { Button, Form, Input, Space, Col, Row, Table, Popconfirm, message, Switch } from 'antd';
 import type { RootData } from '@new-house/database/model/mail';
 import { PlusOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { subscribeList, subscribeRemove } from '@/api/subscribe.js';
-import { useAntdTable, useRequest } from 'ahooks';
+import { subscribeList, subscribeRemove, subscribeSwitchState, subscribeRepeat } from '@/api/subscribe.js';
+import { useAntdTable, useMap, useRequest } from 'ahooks';
 import PrivateModal from './modal.js';
 
 import type { ColumnsType } from 'antd/es/table';
 
 const Subscribe = () => {
   const [form] = Form.useForm<RootData>();
+
+  const [status, { set: setStatus, get: getStatus, reset: resetStatus }] = useMap<string, { loading: boolean }>();
+
+  const { run: runState } = useRequest(subscribeSwitchState, {
+    manual: true,
+    onBefore([id]) {
+      // 考虑下可能得内存泄漏
+      if (status.size >= 1000) {
+        resetStatus();
+      }
+      setStatus(`${id}`, {
+        loading: true,
+      });
+    },
+    onSuccess() {
+      message.success('操作成功');
+    },
+    onError(err) {
+      message.error(err.message);
+    },
+    onFinally([id]) {
+      setStatus(`${id}`, {
+        loading: false,
+      });
+    },
+  });
+  // 重发邮件
+  const { run: runRepeat } = useRequest(subscribeRepeat, {
+    manual: true,
+    onSuccess() {
+      message.success(`重发邮件成功`);
+    },
+    onError(e) {
+      message.error(e.message);
+    },
+  });
+
   const columns: ColumnsType<RootData> = [
     {
       title: '邮箱地址',
@@ -29,10 +66,21 @@ const Subscribe = () => {
       },
     },
     {
-      title: '当前状态',
+      title: '订阅邮件状态',
       key: 'disable',
       render(_, record) {
-        return record.disable ? <Tag color="warning">禁用</Tag> : <Tag color="success">正常</Tag>;
+        const { loading } = getStatus(`${record._id}`) || {};
+        return (
+          <Switch
+            checked={!record.disable}
+            loading={loading}
+            onChange={() => {
+              runState(record._id, !record.disable);
+              refreshList(true);
+            }}
+          />
+        );
+        // return record.disable ? <Tag color="warning">禁用</Tag> : <Tag color="success">正常</Tag>;
       },
     },
     {
@@ -50,6 +98,21 @@ const Subscribe = () => {
         <Space size="middle">
           <a
             href="#"
+            style={{
+              cursor: record.disable ? 'not-allowed' : undefined,
+            }}
+            onClick={(e) => {
+              e.preventDefault();
+              if (record.disable) {
+                return;
+              }
+              runRepeat(record.mailbox);
+            }}
+          >
+            重发邮件
+          </a>
+          <a
+            href="#"
             onClick={(e) => {
               e.preventDefault();
               setOpen(true);
@@ -64,7 +127,7 @@ const Subscribe = () => {
             description="确认删除吗？"
             onConfirm={() => {
               run(record._id);
-              refreshList(false);
+              refreshList(true);
             }}
           >
             <a href="#" onClick={(e) => e.preventDefault()}>
@@ -83,10 +146,10 @@ const Subscribe = () => {
 
   const { onChange, pagination } = tableProps;
   // 刷新列表
-  const refreshList = (add = true) => {
+  const refreshList = (beforeOne = true) => {
     onChange({
       ...pagination,
-      ...(add
+      ...(!beforeOne
         ? {
             current: 1,
           }
