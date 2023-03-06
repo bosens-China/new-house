@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": "true",
   "dependencies": {
+    "@new-house/public": "workspace:^1.0.0",
     "mongoose": "^6.9.0"
   },
   "exports": {

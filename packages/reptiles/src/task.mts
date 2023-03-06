@@ -4,10 +4,16 @@ import list from './function/list.mjs';
 import notice from '@new-house/notice';
 import { group } from '@new-house/public/speedLimit/index';
 import ProgressBar from 'progress';
+import { isDebugger } from '@new-house/public/state';
 
 export const task = async () => {
   const diff = await list();
   const values = diff.filter((f) => f && f.state !== '登记结束');
+  // 调试模式下，直接缩减任务
+  if (isDebugger()) {
+    values.length = 1;
+  }
+
   if (!values.length) {
     console.log(`当前列表值未更新`);
     return;

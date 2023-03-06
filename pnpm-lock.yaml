@@ -103,8 +103,10 @@ importers:
 
   packages/database:
     specifiers:
+      '@new-house/public': workspace:^1.0.0
       mongoose: ^6.9.0
     dependencies:
+      '@new-house/public': link:../public
       mongoose: 6.9.0
 
   packages/entrance:

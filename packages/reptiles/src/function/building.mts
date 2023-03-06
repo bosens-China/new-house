@@ -5,6 +5,7 @@ import { getBuilding, getHouses } from '../api/index.mjs';
 import { group } from '@new-house/public/speedLimit/index';
 import { housingSupplement } from '@new-house/database/model/building';
 import { Building, Data } from '@new-house/database/model/building';
+import { isDebugger } from '@new-house/public/state';
 
 export const transformation = (html: string) => {
   const $ = load(html, null, false);
@@ -62,6 +63,10 @@ export default async (link: string) => {
   const tasks = layers.map((f) => {
     return () => getHouses(f);
   });
+  // 调试模式下，缩减任务
+  if (isDebugger()) {
+    tasks.length = 2;
+  }
   return {
     tasks,
     async actuator(onChange: () => void) {
