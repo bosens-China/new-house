@@ -6,6 +6,8 @@
     "@fastify/type-provider-typebox": "^2.4.0",
     "@new-house/database": "workspace:^1.0.0",
     "@new-house/entrance": "workspace:^1.0.0",
+    "@new-house/notice": "workspace:^1.0.0",
+    "@new-house/public": "workspace:^1.0.0",
     "@sinclair/typebox": "^0.25.23",
     "fastify": "^4.13.0",
     "glob": "^8.1.0",

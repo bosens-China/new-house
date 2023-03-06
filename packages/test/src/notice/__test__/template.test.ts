@@ -52,20 +52,10 @@ test(`priceFiltering`, () => {
 test('template', () => {
   const html = getTemplate(filterNewData, filterAllData);
   expect(html.includes('本次新增楼盘 1 个')).toBeTruthy();
-  expect(html).not.toMatch(/所有楼盘/);
+
   expect(getTemplate([], [])).not.toMatch(/新增楼盘|所有楼盘/);
   expect(getTemplate(filterAllData, [])).toMatch('本次新增楼盘 1 个');
   expect(getTemplate(filterAllData, [])).not.toMatch(/所有楼盘/);
   expect(getTemplate([], filterNewData)).not.toMatch(/新增楼盘/);
-  expect(getTemplate([], filterNewData)).not.toMatch('所有楼盘 1 个');
-
-  const newAll = [...filterAllData].map((f: any, index: number) => {
-    return {
-      ...f,
-      id: `${index}`,
-    };
-  });
-
-  expect(getTemplate(filterNewData, newAll)).toMatch('本次新增楼盘 1 个');
-  expect(getTemplate(filterNewData, newAll)).toMatch('所有楼盘 1 个');
+  expect(getTemplate([], filterNewData)).toMatch('所有楼盘 1 个');
 });

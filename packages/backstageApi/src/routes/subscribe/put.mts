@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { Static, Type } from '@sinclair/typebox';
 import { Mail } from '@new-house/database/model/mail';
+import { filterUndefinedValues } from '@new-house/public/object';
 
 const SubscribePut = Type.Object({
   // 是否禁用
@@ -33,7 +34,7 @@ export default (fastify: FastifyInstance) => {
       if (!(await Mail.findOne({ _id: id }))) {
         throw new Error(`待更新值不存在`);
       }
-      await Mail.updateOne({ _id: id }, { $set: { disable, ceilingPrice, floorPrice } });
+      await Mail.updateOne({ _id: id }, { $set: filterUndefinedValues({ disable, ceilingPrice, floorPrice }) });
       return '更新成功';
     },
   );

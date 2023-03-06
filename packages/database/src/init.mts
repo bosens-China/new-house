@@ -15,12 +15,15 @@ export const init = async () => {
     throw new Error(`mongodb 连接失败 ${url}`);
   }
   console.log(`mongodb 连接成功 ${url}`);
-  /*
-   * 每次更新都把之前默认插入的数据删除，然后重新插入
-   */
+  // /*
+  //  * 每次更新都把之前默认插入的数据删除，然后重新插入
+  //  */
 
-  for (const item of defaultMailbox) {
-    await Mail.deleteMany({ mailbox: item.mailbox });
+  // for (const item of defaultMailbox) {
+  //   await Mail.deleteMany({ mailbox: item.mailbox });
+  // }
+  const length = (await Mail.find({}).lean()).length;
+  if (!length) {
+    await Mail.insertMany(defaultMailbox);
   }
-  await Mail.insertMany(defaultMailbox);
 };

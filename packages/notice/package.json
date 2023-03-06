@@ -5,6 +5,7 @@
   "main": "./src/index.mts",
   "module": "./src/index.mts",
   "dependencies": {
+    "@new-house/public": "workspace:^1.0.0",
     "cheerio": "1.0.0-rc.12",
     "nodemailer": "^6.9.1",
     "nunjucks": "^3.2.3"

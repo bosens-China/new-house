@@ -38,6 +38,8 @@ importers:
       '@fastify/type-provider-typebox': ^2.4.0
       '@new-house/database': workspace:^1.0.0
       '@new-house/entrance': workspace:^1.0.0
+      '@new-house/notice': workspace:^1.0.0
+      '@new-house/public': workspace:^1.0.0
       '@sinclair/typebox': ^0.25.23
       '@types/glob': ^8.1.0
       '@types/lodash-es': ^4.17.6
@@ -49,6 +51,8 @@ importers:
       '@fastify/type-provider-typebox': 2.4.0_idgkln4646eoduv6icrz4hxk6a
       '@new-house/database': link:../database
       '@new-house/entrance': link:../entrance
+      '@new-house/notice': link:../notice
+      '@new-house/public': link:../public
       '@sinclair/typebox': 0.25.23
       fastify: 4.13.0
       glob: 8.1.0
@@ -145,12 +149,14 @@ importers:
   packages/notice:
     specifiers:
       '@new-house/database': workspace:^1.0.0
+      '@new-house/public': workspace:^1.0.0
       '@types/nodemailer': ^6.4.7
       '@types/nunjucks': ^3.2.2
       cheerio: 1.0.0-rc.12
       nodemailer: ^6.9.1
       nunjucks: ^3.2.3
     dependencies:
+      '@new-house/public': link:../public
       cheerio: 1.0.0-rc.12
       nodemailer: 6.9.1
       nunjucks: 3.2.3
