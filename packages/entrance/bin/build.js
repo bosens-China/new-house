@@ -19,7 +19,16 @@ const mergeConfiguration = (mode, p) => {
         'process.env.NODE_ENV': JSON.stringify(mode),
       }),
     ],
-    stats: mode === 'development' ? 'minimal' : undefined,
+    stats: {
+      colors: true,
+      preset: 'minimal',
+      // assets: false,
+      // moduleTrace: false,
+      // logging: 'error',
+      // source: true,
+      // chunkGroupAuxiliary: false,
+      // warnings: false,
+    },
   };
 
   return _.mergeWith(config, newConfig, (objValue, srcValue) => {
@@ -40,22 +49,17 @@ const build = (mode, p) => {
   const fn = (err, stats) => {
     if (err) {
       if (err.details) {
-        console.error(err.details);
+        throw err.details;
       } else {
-        console.error(err.stack || err);
+        throw err.stack || err;
       }
-      return;
     }
 
-    // const info = stats.toJson();
-    // if (stats.hasErrors()) {
-    //   console.error(info.errors);
-    // }
-
-    // // if (stats.hasWarnings()) {
-    // //   console.warn(info.warnings);
-    // // }
-    process.stdout.write(stats?.toString() + '\n');
+    process.stdout.write(
+      stats?.toString({
+        colors: true,
+      }) + '\n',
+    );
 
     // fs.removeSync(filePath);
     // exec(`node --enable-source-maps demo/index.js`);
