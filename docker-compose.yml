@@ -22,6 +22,11 @@ services:
     environment:
       DB_CONN: 'redis://@proxy_redis:6379/0'
 
+  proxy:
+    image: cz5424/ipproxypool
+    ports:
+      - '8000:8000'
+
   proxy_redis:
     image: 'redis'
 

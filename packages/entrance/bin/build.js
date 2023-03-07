@@ -25,9 +25,9 @@ const mergeConfiguration = (mode, p) => {
       // assets: false,
       // moduleTrace: false,
       // logging: 'error',
-      // source: true,
+      source: true,
       // chunkGroupAuxiliary: false,
-      // warnings: false,
+      warnings: false,
     },
   };
 
@@ -57,7 +57,9 @@ const build = (mode, p) => {
 
     process.stdout.write(
       stats?.toString({
-        colors: true,
+        ...webpackConfig.stats,
+        // 生产模式，全部输出
+        ...(mode === 'production' ? { preset: 'normal', warnings: true } : {}),
       }) + '\n',
     );
 
