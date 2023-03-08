@@ -1,3 +1,5 @@
+/// <reference path="../../../environment.d.ts" />
+
 import { init } from '@new-house/database/init';
 import { task } from './task.mjs';
 import { timing } from './timing.mjs';

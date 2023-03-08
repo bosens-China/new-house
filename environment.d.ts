@@ -9,8 +9,11 @@ declare global {
       // 邮箱相关
       EMAIL_ACCOUNT: string;
       EMAIL_AUTHORIZATION_CODE: string;
-      // 其他
-      PROXY_ADDRESS: string;
+
+      // 代理池1
+      PROXY_PROXY_POOL: string;
+      // 代理池2
+      PROXY_IPPROXYPOOL: string;
 
       // server部分
       PORT: string;
