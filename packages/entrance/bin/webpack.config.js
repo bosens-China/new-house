@@ -58,7 +58,9 @@ const config = {
   },
   plugins: [
     new RunNodeWebpackPlugin({
-      nodeArgs: ['--enable-source-maps'],
+      nodeArgs: {
+        execArgv: ['--enable-source-maps'],
+      },
       runOnlyInWatchMode: true,
       scriptToRun: 'index.cjs',
     }),
