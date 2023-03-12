@@ -16,7 +16,6 @@ instance.interceptors.request.use(async function (config) {
   /*
    * 这里是因为jest测试ora的时候抛出错误，暂时先这样解决
    */
-
   // 设置代理
   config.proxy = setProxy(await proxy.get());
   await alone(
@@ -42,7 +41,7 @@ instance.interceptors.response.use(
   async function (error) {
     const values = error?.config?.proxy;
     if (!values) {
-      return error;
+      return Promise.reject(error);
     }
     const { host, port } = values;
     proxy.changeStatus(`${host}:${port}`, 'fail');

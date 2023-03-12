@@ -56,9 +56,9 @@ export const getTotal = (html: string) => {
 const PAGE_SIZE = 15;
 
 // 如果传递有默认的则不再请求第一页
-export default async (defaultHtml?: string) => {
+export default async () => {
   const currentList = await List.find({}).lean();
-  const html = defaultHtml || (await getList());
+  const html = await getList();
   const total = getTotal(html);
   const htmlArr = [html];
   // 需要插入的条数
