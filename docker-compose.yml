@@ -20,7 +20,7 @@ services:
     depends_on:
       - proxy_redis
     environment:
-      DB_CONN: 'redis://@proxy_redis:6379/0'
+      DB_CONN: ${REDIS_URL}
 
   ipproxypool:
     image: cz5424/ipproxypool

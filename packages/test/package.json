@@ -15,6 +15,6 @@
   "scripts": {
     "check": "tsc",
     "jest-clear": "jest --clearCache",
-    "test": "jest"
+    "test": "jest --detectOpenHandles"
   }
 }

@@ -1,27 +1,25 @@
 import { transformation, getTotal } from '../../../../reptiles/src/function//list.mjs';
-import fs from 'fs';
-import path from 'path';
 import html from './assets/list.js';
 
 test(`transformation`, () => {
   const values = transformation(html);
   expect(values.length).toBe(15);
   expect(values[0]).toEqual({
-    id: '2302008',
-    name: '珺悦台',
-    link: `http://60.173.254.126:8888/detail/viewscheme/768`,
-    building: ['G2幢'],
-    enterprise: '合肥和颂房地产开发有限公司',
-    region: '包河区',
-    startTime: new Date('2023/2/10 15:00:00').valueOf(),
-    endTime: new Date('2023/2/13 15:00:00').valueOf(),
-    startTimeStr: '2023-02-10 15:00:00',
-    endTimeStr: '2023-02-13 15:00:00',
-    total: 88,
-    state: '暂未开始',
+    id: '2303016',
+    name: '璟庭里',
+    link: `https://www.hfzfzlw.com/spf/detail/viewscheme/809`,
+    building: ['6幢'],
+    enterprise: '合肥鸣科房地产有限责任公司',
+    region: '滨湖区',
+    startTime: new Date('2023/3/11 16:00:00').valueOf(),
+    endTime: new Date('2023/3/15 16:00:00').valueOf(),
+    startTimeStr: '2023-03-11 16:00:00',
+    endTimeStr: '2023-03-15 16:00:00',
+    total: 60,
+    state: '正在登记',
   });
 });
 
 test('getTotal', () => {
-  expect(getTotal(html)).toBe(615);
+  expect(getTotal(html)).toBe(656);
 });
