@@ -13,13 +13,14 @@
     "axios": "^1.2.6",
     "cheerio": "1.0.0-rc.12",
     "dayjs": "^1.11.7",
+    "lodash-es": "^4.17.21",
     "mongoose": "^6.9.0",
     "node-schedule": "^2.1.1",
-    "ora": "^6.1.2",
     "progress": "^2.0.3",
     "random-useragent": "^0.5.0"
   },
   "devDependencies": {
+    "@types/lodash-es": "^4.17.6",
     "@types/node-schedule": "^2.1.0",
     "@types/progress": "^2.0.5",
     "@types/random-useragent": "^0.3.1",

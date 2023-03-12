@@ -1,8 +1,8 @@
-import request from '../utils/request.mjs';
+import request from '../utils/request/index.mjs';
 import { Houses } from '@new-house/database/model/building';
 
 export const getList = async (page = 1) => {
-  const { data } = await request.get<string>(`/?p=${page}&xmmc=&qy=&djzt=`);
+  const { data } = await request.get<string>(`/spf/Scheme/?p=${page}&xmmc=&qy=&djzt=`);
   return data;
 };
 
@@ -20,10 +20,10 @@ export const getBuilding = async (url: string) => {
 export const getHouses = async (key: string) => {
   const {
     data: { id },
-  } = await request.get<{ id: string; state: boolean }>(`/details/getrsa/${nscaler(key)}`);
+  } = await request.get<{ id: string; state: boolean }>(`/spf/details/getrsa/${nscaler(key)}`);
   const {
     data: { data },
-  } = await request.get<{ data: Houses; state: boolean }>(`/details/house/${id}`);
+  } = await request.get<{ data: Houses; state: boolean }>(`/spf/details/house/${id}`);
   return data;
 };
 

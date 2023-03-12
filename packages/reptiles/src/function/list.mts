@@ -3,7 +3,7 @@ import { load } from 'cheerio';
 import dayjs from 'dayjs';
 import { Data, List } from '@new-house/database/model/list';
 import 'dayjs/locale/zh-cn';
-import { BASE_URL } from '../utils/request.mjs';
+import { BASE_URL } from '../utils/request/constant.mjs';
 
 dayjs.locale('zh-cn');
 

@@ -1,7 +1,7 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      NODE_ENV: 'development' | 'production';
+      NODE_ENV: 'development' | 'production' | 'test';
       MONGO_INITDB_ROOT_USERNAME: string;
       MONGO_INITDB_ROOT_PASSWORD: string;
       MONGO_INITDB_ROOT_PORT: string;
