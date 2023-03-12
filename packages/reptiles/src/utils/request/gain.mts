@@ -23,7 +23,7 @@ export const ipproxypool = async (): Promise<Array<Format>> => {
       };
     });
   } catch {
-    throw new Error(`连接 PROXY_IPPROXYPOOL 失败，请检查env填写是否正确`);
+    throw new Error(`连接 PROXY_IPPROXYPOOL 失败，请检查env填写是否正确，当前值为：${PROXY_IPPROXYPOOL}`);
   }
 };
 
@@ -63,6 +63,6 @@ export const proxyPool = async (): Promise<Array<Format>> => {
         };
       });
   } catch {
-    throw new Error(`连接 PROXY_PROXY_POOL 失败，请检查env填写是否正确`);
+    throw new Error(`连接 PROXY_PROXY_POOL 失败，请检查env填写是否正确，当前值为：${PROXY_PROXY_POOL}`);
   }
 };

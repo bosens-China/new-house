@@ -22,6 +22,7 @@
   },
   "scripts": {
     "check": "pnpm run -r check",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "test": "docker-compose -f test.yml up"
   }
 }

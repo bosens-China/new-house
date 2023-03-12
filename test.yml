@@ -1,0 +1,61 @@
+version: '3.1'
+
+services:
+  mongo:
+    image: mongo:4.2.23
+    environment:
+      - MONGO_INITDB_DATABASE=house
+      # provide your credentials here
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - '${MONGO_INITDB_ROOT_PORT}:27017'
+    volumes:
+      - ./data:/data/db
+
+  proxy_pool:
+    image: jhao104/proxy_pool
+    ports:
+      - '5010:5010'
+    depends_on:
+      - proxy_redis
+    environment:
+      DB_CONN: ${REDIS_URL}
+
+  ipproxypool:
+    image: cz5424/ipproxypool
+    ports:
+      - '5011:8000'
+
+  proxy_redis:
+    image: 'redis'
+
+  web:
+    image: boses/backstage-web:1.0.1
+    ports:
+      - ${NGINX_PORT}:80
+    environment:
+      - API_PATH=http://api:4000
+      - NGINX_PORT=${NGINX_PORT}
+    depends_on:
+      - 'api'
+
+  api:
+    image: boses/backstage-api:1.0.1
+    environment:
+      - MONGO_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo/house?authSource=admin
+    depends_on:
+      - 'mongo'
+    ports:
+      - 4000:4000
+
+  reptiles:
+    image: boses/reptiles:1.0.7
+    environment:
+      - MONGO_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo/house?authSource=admin
+      - PROXY_PROXY_POOL=http://proxy_pool:5010
+      - PROXY_IPPROXYPOOL=http://ipproxypool:8000
+    depends_on:
+      - 'mongo'
+      - 'proxy_pool'
+      - 'ipproxypool'

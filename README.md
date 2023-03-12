@@ -19,6 +19,8 @@
 
 ## 使用方式
 
+### 本地运行
+
 ```sh
 git clone git@github.com:bosens-China/new-house.git
 pnpm i
@@ -26,6 +28,10 @@ pnpm i
 # build backstageApi、backstageWeb、reptiles
 # 更改 .env 文件下  EMAIL_ACCOUNT、EMAIL_AUTHORIZATION_CODE
 ```
+
+### Docker
+
+参考 [test.yml](./test.yml) 文件
 
 ## 环境变量说明
 
